@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tax Estimator - Care & Tax Services</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; font-family: 'Inter', sans-serif; background: #f0f4f8; color: #333; }
+    .container { max-width: 900px; margin: 40px auto; padding: 20px; background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+    h1 { font-size: 2.2rem; font-weight: 700; color: #0a3d62; text-align: center; }
+    h2 { font-size: 1.6rem; font-weight: 600; margin-bottom: 16px; padding: 12px; background: #0a3d62; color: #fff; border-radius: 6px; }
+    .progress { background: #e0e0e0; border-radius: 4px; height: 8px; margin: 20px 0; }
+    .progress-bar { background: #0a3d62; height: 100%; width: 0; transition: width 0.4s ease; border-radius: 4px; }
+    .step { display: none; opacity: 0; transform: translateY(20px); transition: opacity 0.4s, transform 0.4s; }
+    .step.active { display: block; opacity: 1; transform: translateY(0); }
+    .field-group { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    label { font-weight: 600; margin-bottom: 6px; display: block; }
+    input[type=text], select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
+    .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 16px; margin: 20px 0; }
+    .checkbox-grid label { display: flex; align-items: center; cursor: pointer; }
+    .checkbox-grid input { margin-right: 8px; accent-color: #0a3d62; }
+    .btn { padding: 12px 24px; font-size: 1rem; border-radius: 6px; border: none; cursor: pointer; transition: background 0.3s; }
+    .btn-primary { background: #0a3d62; color: #fff; }
+    .btn-primary:hover { background: #07324a; }
+    .btn-secondary { background: #e0e0e0; color: #333; }
+    .btn-secondary:hover { background: #ccc; }
+    .result-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    .result-table th, .result-table td { border: 1px solid #ddd; padding: 10px; }
+    .result-table th { background: #f7f9fc; color: #0a3d62; }
+    .disclaimer { font-size: 0.85rem; color: #666; text-align: center; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Care & Tax Services: Tax Estimator</h1>
+    <div class="progress"><div id="progressBar" class="progress-bar"></div></div>
+
+    <div class="step" id="step1">
+      <h2>Basic Info</h2>
+      <div class="field-group">
+        <div><label>Year</label><input type="text" value="2025" disabled></div>
+        <div><label>Filing Status</label><select id="filingStatus"><option value="">-- Select --</option><option value="single">Single</option><option value="married">Married Filing Jointly</option><option value="mfs">Married Filing Separately</option><option value="hoh">Head of Household</option></select></div>
+      </div>
+      <div style="text-align:right;"><button class="btn btn-primary" onclick="nextStep(2)">Next</button></div>
+    </div>
+
+    <div class="step" id="step2">
+      <h2>Dependents</h2>
+      <div class="field-group">
+        <div><label>Children under 12</label><input type="text" id="childUnder12" class="numeric" value="0"></div>
+        <div><label>Children under 17</label><input type="text" id="childDependents" class="numeric" value="0"></div>
+        <div><label>Other Dependents</label><input type="text" id="otherDependents" class="numeric" value="0"></div>
+        <div><label>Child Claimant</label><select id="childClaim"><option value="you">I am</option><option value="other">Other parent</option><option value="thirdparty">Other relative</option></select></div>
+      </div>
+      <div style="display:flex; justify-content:space-between;"><button class="btn btn-secondary" onclick="nextStep(1)">Back</button><button class="btn btn-primary" onclick="nextStep(3)">Next</button></div>
+    </div>
+
+    <div class="step" id="step3">
+      <h2>Income & Credits</h2>
+      <div class="checkbox-grid">
+        <label><input type="checkbox" onchange="toggleSection('w2Section')"> W-2 Income</label>
+        <label><input type="checkbox" onchange="toggleSection('schedCSection')"> Schedule C Income</label>
+        <label><input type="checkbox" onchange="toggleSection('eduSection')"> 1098-T Education Credit</label>
+        <label><input type="checkbox" onchange="toggleSection('energySection')"> Energy Credit</label>
+        <label><input type="checkbox" onchange="toggleSection('unempSection')"> Unemployment Income</label>
+        <label><input type="checkbox" onchange="toggleSection('ptcSection')"> Premium Tax Credit</label>
+        <label><input type="checkbox" onchange="toggleSection('careSection')"> Child Care Expenses</label>
+      </div>
+      <div id="w2Section" style="display:none; margin-bottom:20px;"><div class="field-group"><div><label>W-2 Total Income</label><input type="text" class="numeric w2Income"></div><div><label>W-2 Federal Withheld</label><input type="text" class="numeric w2Federal"></div><div><label>Social Security Withheld</label><input type="text" class="numeric w2SS"></div><div><label>Medicare Withheld</label><input type="text" class="numeric w2Medicare"></div></div></div>
+      <div id="schedCSection" style="display:none; margin-bottom:20px;"><div class="field-group"><div><label>Schedule C Income</label><input type="text" class="numeric" id="schedCIncome"></div><div><label>Schedule C Federal Withheld</label><input type="text" class="numeric" id="schedCFederal"></div></div></div>
+      <div id="eduSection" style="display:none; margin-bottom:20px;"><label>Education Expenses</label><input type="text" class="numeric" id="eduExpenses"></div>
+      <div id="energySection" style="display:none; margin-bottom:20px;"><label>Energy Improvements</label><input type="text" class="numeric" id="energyCredit"></div>
+      <div id="unempSection" style="display:none; margin-bottom:20px;"><div class="field-group"><div><label>Unemployment Compensation</label><input type="text" class="numeric unempIncome"></div><div><label>Unemployment Federal Withheld</label><input type="text" class="numeric unempFederal"></div></div></div>
+      <div id="ptcSection" style="display:none; margin-bottom:20px;"><label>PTC Amount</label><input type="text" class="numeric" id="ptcAmount"></div>
+      <div id="careSection" style="display:none; margin-bottom:20px;"><label>Child Care Expenses</label><input type="text" class="numeric" id="careExpenses"></div>
+      <div style="display:flex; justify-content:space-between;"><button class="btn btn-secondary" onclick="nextStep(2)">Back</button><button class="btn btn-primary" onclick="nextStep(4)">Next</button></div>
+    </div>
+
+    <div class="step" id="step4">
+      <h2>Spouse Income & Credits</h2>
+      <div class="checkbox-grid">
+        <label><input type="checkbox" onchange="toggleSection('spouseW2')"> W-2 Income</label>
+        <label><input type="checkbox" onchange="toggleSection('spouse1099')"> 1099 Income</label>
+        <label><input type="checkbox" onchange="toggleSection('spouseSchedC')"> Schedule C Income</label>
+        <label><input type="checkbox" onchange="toggleSection('spouseEdu')"> Education Credit</label>
+        <label><input type="checkbox" onchange="toggleSection('spouseEnergy')"> Energy Credit</label>
+        <label><input type="checkbox" onchange="toggleSection('spouseUnempSection')"> Unemployment Income</label>
+        <label><input type="checkbox" onchange="toggleSection('spousePtcSection')"> Premium Tax Credit</label>
+        <label><input type="checkbox" onchange="toggleSection('spouseCareSection')"> Child Care Expenses</label>
+      </div>
+      <div id="spouseW2" style="display:none; margin-bottom:20px;"><div class="field-group"><div><label>Spouse W-2 Income</label><input type="text" class="numeric spouseW2Income"></div><div><label>Spouse W-2 Federal Withheld</label><input type="text" class="numeric spouseW2Federal"></div><div><label>Spouse Social Security Withheld</label><input type="text" class="numeric spouseW2SS"></div><div><label>Spouse Medicare Withheld</label><input type="text" class="numeric spouseW2Medicare"></div></div></div>
+      <div id="spouse1099" style="display:none; margin-bottom:20px;"><div class="field-group"><div><label>Spouse 1099 Income</label><input type="text" class="numeric spouse1099Income"></div><div><label>Spouse 1099 Federal Withheld</label><input type="text" class="numeric spouse1099Federal"></div></div></div>
+      <div id="spouseSchedC" style="display:none; margin-bottom:20px;"><div class="field-group"><div><label>Spouse Schedule C Income</label><input type="text" class="numeric spouseSchedCIncome"></div><div><label>Spouse Schedule C Federal Withheld</label><input type="text" class="numeric spouseSchedCFederal"></div></div></div>
+      <div id="spouseEdu" style="display:none; margin-bottom:20px;"><label>Spouse Education Expenses</label><input type="text" class="numeric" id="spouseEduExpenses"></div>
+      <div id="spouseEnergy" style="display:none; margin-bottom:20px;"><label>Spouse Energy Improvements</label><input type="text" class="numeric" id="spouseEnergyCredit"></div>
+      <div id="spouseUnempSection" style="display:none; margin-bottom:20px;"><div class="field-group"><div><label>Spouse Unemployment Compensation</label><input type="text" class="numeric spouseUnempIncome"></div><div><label>Spouse Unemployment Federal Withheld</label><input type="text" class="numeric spouseUnempFederal"></div></div></div>
+      <div id="spousePtcSection" style="display:none; margin-bottom:20px;"><label>Spouse PTC Amount</label><input type="text" class="numeric" id="spousePtcAmount"></div>
+      <div id="spouseCareSection" style="display:none; margin-bottom:20px;"><label>Spouse Child Care Expenses</label><input type="text" class="numeric" id="spouseCareExpenses"></div>
+      <div style="display:flex; justify-content:space-between;"><button class="btn btn-secondary" onclick="nextStep(3)">Back</button><button class="btn btn-primary" onclick="calculateEstimate()">Estimate Refund</button></div>
+    </div>
+
+    <div class="step active" id="step5">
+      <h2>Estimated Summary</h2>
+      <h3>Credits Summary</h3>
+      <table class="result-table"><thead><tr><th>Credit</th><th>Amount</th></tr></thead><tbody id="creditsBox"></tbody></table>
+      <h3>Income & Taxes</h3>
+      <table class="result-table"><thead><tr><th>Item</th><th>Amount</th></tr></thead><tbody id="incomeBox"></tbody></table>
+      <div style="text-align:center;"><button class="btn btn-primary" onclick="nextStep(1)">Start Over</button></div>
+      <div class="disclaimer">* This is an estimate only. Results are not 100% accurate and should not be considered tax advice.</div>
+    </div>
+  </div>
+  <script>
+    function nextStep(step) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      var el = document.getElementById('step' + step);
+      if (el) el.classList.add('active');
+      document.getElementById('progressBar').style.width = ((step - 1) * 25) + '%';
+    }
+    function toggleSection(id) {
+      var el = document.getElementById(id);
+      if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+    function nextAfterIncome() {
+      var fs = document.getElementById('filingStatus').value;
+      if (fs === 'married' || fs === 'mfs') nextStep(4);
+      else calculateEstimate();
+    }
+    function calculateEstimate() {
+      var fs = document.getElementById('filingStatus').value;
+      var ch12 = parseFloat(document.getElementById('childUnder12').value.replace(/,/g,''))||0;
+      var ch17 = parseFloat(document.getElementById('childDependents').value.replace(/,/g,''))||0;
+      var od = parseFloat(document.getElementById('otherDependents').value.replace(/,/g,''))||0;
+      function getSum(sel) { return Array.from(document.querySelectorAll(sel)).reduce((a,e)=>a+(parseFloat(e.value.replace(/,/g,''))||0),0); }
+      var w2i = getSum('.w2Income'), w2w = getSum('.w2Federal'), w2ss = getSum('.w2SS'), w2med = getSum('.w2Medicare');
+      var sci = parseFloat(document.getElementById('schedCIncome').value.replace(/,/g,''))||0;
+      var scw = parseFloat(document.getElementById('schedCFederal').value.replace(/,/g,''))||0;
+      var ei = parseFloat(document.getElementById('eduExpenses').value.replace(/,/g,''))||0;
+      var ec = parseFloat(document.getElementById('energyCredit').value.replace(/,/g,''))||0;
+      var ui = getSum('.unempIncome'), uf = getSum('.unempFederal');
+      var ptc = parseFloat(document.getElementById('ptcAmount').value.replace(/,/g,''))||0;
+      var care = parseFloat(document.getElementById('careExpenses').value.replace(/,/g,''))||0;
+      var careCredit = ch12 ? Math.min(care * 0.2, ch12 * 600) : 0;
+      var swi = getSum('.spouseW2Income'), swf = getSum('.spouseW2Federal'), swss = getSum('.spouseW2SS'), swmed = getSum('.spouseW2Medicare');
+      var s91 = getSum('.spouse1099Income'), s9w = getSum('.spouse1099Federal');
+      var ssi = getSum('.spouseSchedCIncome'), ssf = getSum('.spouseSchedCFederal');
+      var sei = parseFloat(document.getElementById('spouseEduExpenses').value.replace(/,/g,''))||0;
+      var sec = parseFloat(document.getElementById('spouseEnergyCredit').value.replace(/,/g,''))||0;
+      var sui = getSum('.spouseUnempIncome'), suf = getSum('.spouseUnempFederal');
+      var sptc = parseFloat(document.getElementById('spousePtcAmount').value.replace(/,/g,''))||0;
+      var scare = parseFloat(document.getElementById('spouseCareExpenses').value.replace(/,/g,''))||0;
+      var scareCredit = ch12 ? Math.min(scare * 0.2, ch12 * 600) : 0;
+      var ti = w2i + sci + ui + swi + s91 + ssi + sui;
+      var tw = w2w + scw + uf + swf + s9w + ssf + w2ss + w2med + swss + swmed + suf;
+      var sd = fs==='single'?13850:fs==='married'?27700:20800;
+      var txi = Math.max(ti - sd, 0);
+      var tax = 0;
+      if (fs==='single') tax = txi <= 11000 ? txi * 0.1 : txi <= 44725 ? 1100 + (txi - 11000) * 0.12 : 5147 + (txi - 44725) * 0.22;
+      else if (fs==='hoh') tax = txi <= 15700 ? txi * 0.1 : txi <= 59850 ? 1570 + (txi - 15700) * 0.12 : 6868 + (txi - 59850) * 0.22;
+      else tax = txi <= 22000 ? txi * 0.1 : txi <= 89450 ? 2200 + (txi - 22000) * 0.12 : 10294 + (txi - 89450) * 0.22;
+      var ctc = ch17 * 2000;
+      var odc = od * 500;
+      var aotc = Math.min(ei * 0.25, 2500);
+      var eic = 0;
+      if (fs!=='mfs') {
+        if (ch17===0) eic = Math.min(ti * 0.0765, 600);
+        else if (ch17===1) eic = Math.min(ti * 0.34, 3924);
+        else if (ch17===2) eic = Math.min(ti * 0.4, 6530);
+        else if (ch17>=3) eic = Math.min(ti * 0.45, 7325);
+      }
+      var cred = ctc + odc + aotc + ec + eic + ptc + careCredit + sei + sec + sptc + scareCredit;
+      var refund = Math.max(tw + cred - tax, 0);
+      var alertm = (ctc||aotc||eic)?'<tr><td colspan="2"><strong>⚠️ Due Diligence Required:</strong> Form 8867 must be completed.</td></tr>':'';
+      var warn = '';
+      if (cred > ti) warn += '<tr><td colspan="2"><strong>⚠️ IRS Notice:</strong> Credits exceed income. Review inputs.</td></tr>';
+      if (tw > ti) warn += '<tr><td colspan="2"><strong>⚠️ IRS Notice:</strong> Withheld exceeds income. Verify accuracy.</td></tr>';
+      var forms = ['1040']; if (ctc) forms.push('Schedule 8812'); if (aotc) forms.push('8863'); if (ec) forms.push('5695'); if (eic) forms.push('EIC'); if (ptc) forms.push('8962');
+      function fmt(n){return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+      var cb=document.getElementById('creditsBox'), ib=document.getElementById('incomeBox'); cb.innerHTML=''; ib.innerHTML='';
+      [['Child Tax Credit', ctc], ['Other Dependents Credit', odc], ['American Opportunity Credit', aotc], ['Energy Credit', ec], ['Earned Income Credit', eic], ['Premium Tax Credit', ptc], ['Child Care Credit', careCredit], ['Other Credits', sei+sec+sptc+scareCredit], ['Total Credits', cred]]
+        .forEach(r=>cb.insertAdjacentHTML('beforeend', `<tr><td>${r[0]}</td><td>$${fmt(r[1])}</td></tr>`));
+      if (alertm) cb.insertAdjacentHTML('beforeend', alertm);
+      if (warn) cb.insertAdjacentHTML('beforeend', warn);
+      [['Estimated Refund', refund], ['Withheld', tw], ['Total Income', ti], ['Total Taxable Income', txi], ['Total Tax', tax], ['Forms', forms.join(', ')]]
+        .forEach(r=>ib.insertAdjacentHTML('beforeend', `<tr><td>${r[0]}</td><td>${r[0]==='Forms'?r[1]:'$'+fmt(r[1])}</td></tr>`));
+      nextStep(5);
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+      document.querySelectorAll('input.numeric').forEach(i=>{
+        i.addEventListener('blur',function(){var v=this.value.replace(/,/g,'');this.value=v?parseFloat(v).toLocaleString():'';});
+        i.addEventListener('focus',function(){this.value=this.value.replace(/,/g,'');});
+      });
+      nextStep(1);
+    });
+  </script>
+</body>
+</html>
