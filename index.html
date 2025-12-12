@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CARE & TAX SERVICES – Refund Estimator</title>
+  <title>CARE & TAX SERVICES – Refund Estimator (2025)</title>
   <style>
     :root{
       --mint:#2bb7a8;
@@ -122,7 +122,6 @@
     .section{border:1px solid #e6eff1;border-radius:12px;padding:12px}
     .section-title{margin:0 0 8px;font-size:15px;color:#21484d}
 
-    /* ✅ Interview spacing improvements */
     .subcard{
       background:#fff;
       border:1px solid #e6eff1;
@@ -132,12 +131,14 @@
     }
     .stack{display:flex;flex-direction:column;gap:14px}
     .subcard .section-title{margin:0 0 10px}
+    .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid #cfe8e4;background:#f6fffd;border-radius:999px;padding:6px 10px;font-size:13px;color:#0f4f49}
+    .hr{height:1px;background:#e7f2f1;margin:12px 0}
   </style>
 </head>
 <body>
   <header>
     <h1>CARE & TAX SERVICES – Stone Mtn</h1>
-    <h2>Federal Refund Estimator</h2>
+    <h2>Federal Refund Estimator (2025)</h2>
     <div class="muted">Georgia clients • Federal estimate only (no state taxes)</div>
   </header>
 
@@ -156,11 +157,12 @@
         </div>
         <div class="totals-body" id="totalsBody">
           <div class="totals-grid">
-            <div>W-2 Wages</div><div class="kpi" id="rtWages">$0</div>
-            <div>Withholding</div><div class="kpi" id="rtWh">$0</div>
+            <div>W-2 Wages (est.)</div><div class="kpi" id="rtWages">$0</div>
+            <div>Withholding (est.)</div><div class="kpi" id="rtWh">$0</div>
             <div>AGI (preview)</div><div class="kpi" id="rtAGI">$0</div>
             <div>Std Deduction</div><div class="kpi" id="rtStdDed">$0</div>
           </div>
+          <div class="help mt8" id="rtNote"></div>
         </div>
       </div>
     </aside>
@@ -177,168 +179,120 @@
   </div>
 
   <script>
-  /* ===========================
-     CONFIGURATION (2023, 2024, 2025)
-     =========================== */
-  const CONFIG_BY_YEAR = {
-    2023: {
-      stdDeduction: { single:13850, mfj:27700, mfs:13850, hoh:20800, qw:27700 },
-      ageAddOn: { single:1850, hoh:1850, mfj:1500, mfs:1500, qw:1500 },
-      brackets: {
-        single: [[11000,.10],[44725,.12],[95375,.22],[182100,.24],[231250,.32],[578125,.35],[Infinity,.37]],
-        mfj:   [[22000,.10],[89450,.12],[190750,.22],[364200,.24],[462500,.32],[693750,.35],[Infinity,.37]],
-        mfs:   [[11000,.10],[44725,.12],[95375,.22],[182100,.24],[231250,.32],[346875,.35],[Infinity,.37]],
-        hoh:   [[15700,.10],[59850,.12],[95350,.22],[182100,.24],[231250,.32],[578100,.35],[Infinity,.37]],
-        qw:    [[22000,.10],[89450,.12],[190750,.22],[364200,.24],[462500,.32],[693750,.35],[Infinity,.37]],
-      },
-      ctc: {
-        perChild: 2000,
-        refundableCapPerChild: 1600,
-        phaseoutThreshold: { single:200000, mfs:100000, hoh:200000, qw:200000, mfj:400000 },
-        phaseoutPer1000: 50,
-        earnedIncomeThreshold: 2500,
-      },
-      aotc: {
-        phaseout: { single:[80000,90000], hoh:[80000,90000], mfs:[0,0], mfj:[160000,180000], qw:[160000,180000] },
-        refundableRate: 0.40,
-        refundableCapPerStudent: 1000,
-        perStudentMax: 2500
-      },
-      eitc: {
-        investmentIncomeLimit: 11000,
-        params: {
-          0: { phaseIn:.0765, earnedMax:7840, max:600, phaseOutRate:.0765, start:{single:9160, hoh:9160, mfs:0, qw:15310, mfj:15310} },
-          1: { phaseIn:.34,   earnedMax:11750, max:3995, phaseOutRate:.1598, start:{single:21560, hoh:21560, mfs:0, qw:28370, mfj:28370} },
-          2: { phaseIn:.40,   earnedMax:16510, max:6604, phaseOutRate:.2106, start:{single:21560, hoh:21560, mfs:0, qw:28370, mfj:28370} },
-          3: { phaseIn:.45,   earnedMax:16510, max:7430, phaseOutRate:.2106, start:{single:21560, hoh:21560, mfs:0, qw:28370, mfj:28370} },
-        }
-      },
-      adjustments: { iraLimit: 6500, studentLoanInterestCap: 2500 }
+  /* =========================================================
+     2025 ONLY — IRS-BASED CONFIG (keep numbers exact)
+     ========================================================= */
+  const CONFIG_2025 = {
+    year: 2025,
+
+    // Standard deduction (TY 2025)
+    stdDeduction: { single:15750, mfj:31500, mfs:15750, hoh:23625, qw:31500 },
+
+    // Additional standard deduction (age 65+) — per-person add-on
+    ageAddOn: { single:2000, hoh:2000, mfj:1600, mfs:1600, qw:1600 },
+
+    // 2025 brackets (top of each bracket, then Infinity)
+    brackets: {
+      single: [[11925,.10],[48475,.12],[103350,.22],[197300,.24],[250525,.32],[626350,.35],[Infinity,.37]],
+      mfj:    [[23850,.10],[96950,.12],[206700,.22],[394600,.24],[501050,.32],[751600,.35],[Infinity,.37]],
+      mfs:    [[11925,.10],[48475,.12],[103350,.22],[197300,.24],[250525,.32],[375800,.35],[Infinity,.37]],
+      hoh:    [[17000,.10],[64850,.12],[103350,.22],[197300,.24],[250500,.32],[626350,.35],[Infinity,.37]],
+      qw:     [[23850,.10],[96950,.12],[206700,.22],[394600,.24],[501050,.32],[751600,.35],[Infinity,.37]],
     },
 
-    2024: {
-      stdDeduction: { single:14600, mfj:29200, mfs:14600, hoh:21900, qw:29200 },
-      ageAddOn: { single:1950, hoh:1950, mfj:1550, mfs:1550, qw:1550 },
-      brackets: {
-        single: [[11600,.10],[47150,.12],[100525,.22],[191950,.24],[243725,.32],[609350,.35],[Infinity,.37]],
-        mfj:    [[23200,.10],[94300,.12],[201050,.22],[383900,.24],[487450,.32],[731200,.35],[Infinity,.37]],
-        mfs:    [[11600,.10],[47150,.12],[100525,.22],[191950,.24],[243725,.32],[365600,.35],[Infinity,.37]],
-        hoh:    [[16550,.10],[63100,.12],[100500,.22],[191950,.24],[243700,.32],[609350,.35],[Infinity,.37]],
-        qw:     [[23200,.10],[94300,.12],[201050,.22],[383900,.24],[487450,.32],[731200,.35],[Infinity,.37]],
-      },
-      ctc: {
-        perChild: 2000,
-        refundableCapPerChild: 1600,
-        phaseoutThreshold: { single:200000, mfs:100000, hoh:200000, qw:200000, mfj:400000 },
-        phaseoutPer1000: 50,
-        earnedIncomeThreshold: 2500,
-      },
-      aotc: {
-        phaseout: { single:[80000,90000], hoh:[80000,90000], mfs:[0,0], mfj:[160000,180000], qw:[160000,180000] },
-        refundableRate: 0.40,
-        refundableCapPerStudent: 1000,
-        perStudentMax: 2500
-      },
-      eitc: {
-        investmentIncomeLimit: 11600,
-        params: {
-          0: { phaseIn:.0765, earnedMax:7840, max:600, phaseOutRate:.0765, start:{single:9160, hoh:9160, mfs:0, qw:15310, mfj:15310} },
-          1: { phaseIn:.34,   earnedMax:11750, max:3995, phaseOutRate:.1598, start:{single:21560, hoh:21560, mfs:0, qw:28370, mfj:28370} },
-          2: { phaseIn:.40,   earnedMax:16510, max:6604, phaseOutRate:.2106, start:{single:21560, hoh:21560, mfs:0, qw:28370, mfj:28370} },
-          3: { phaseIn:.45,   earnedMax:16510, max:7430, phaseOutRate:.2106, start:{single:21560, hoh:21560, mfs:0, qw:28370, mfj:28370} },
-        }
-      },
-      adjustments: { iraLimit: 7000, studentLoanInterestCap: 2500 }
+    // Child Tax Credit (2025)
+    ctc: {
+      perChild: 2200,
+      refundableCapPerChild: 1700,
+      phaseoutThreshold: { single:200000, hoh:200000, qw:200000, mfj:400000, mfs:200000 }, // MFS uses $200k unless you enforce a different verified threshold
+      phaseoutPer1000: 50,
+      earnedIncomeThreshold: 2500
     },
 
-    2025: {
-      /* ✅ Updated per your requested values */
-      stdDeduction: { single:15750, mfj:31500, mfs:15750, hoh:23625, qw:31500 },
-      ageAddOn: { single:2000, hoh:2000, mfj:1600, mfs:1600, qw:1600 },
+    // AOTC (keep as standard Form 8863 rule set)
+    aotc: {
+      phaseout: { single:[80000,90000], hoh:[80000,90000], qw:[80000,90000], mfj:[160000,180000], mfs:[0,0] },
+      refundableRate: 0.40,
+      refundableCapPerStudent: 1000,
+      perStudentMax: 2500
+    },
 
-      brackets: {
-        single: [
-          [11925,.10],[48475,.12],[103350,.22],[197300,.24],[250525,.32],[626350,.35],[Infinity,.37]
-        ],
-        mfj: [
-          [23850,.10],[96950,.12],[206700,.22],[394600,.24],[501050,.32],[751600,.35],[Infinity,.37]
-        ],
-        mfs: [
-          [11925,.10],[48475,.12],[103350,.22],[197300,.24],[250525,.32],[375800,.35],[Infinity,.37]
-        ],
-        hoh: [
-          [17000,.10],[64850,.12],[103350,.22],[197300,.24],[250500,.32],[626350,.35],[Infinity,.37]
-        ],
-        qw: [
-          [23850,.10],[96950,.12],[206700,.22],[394600,.24],[501050,.32],[751600,.35],[Infinity,.37]
-        ],
-      },
+    // EITC (2025 values + standard worksheet % params)
+    eitc: {
+      investmentIncomeLimit: 11950,
+      params: {
+        0: { phaseIn:.0765, earnedMax:8490,  max:649,  phaseOutRate:.0765, start:{single:10620, hoh:10620, qw:10620, mfj:17570, mfs:0} },
+        1: { phaseIn:.34,   earnedMax:12770, max:4328, phaseOutRate:.1598, start:{single:23350, hoh:23350, qw:23350, mfj:30300, mfs:0} },
+        2: { phaseIn:.40,   earnedMax:17880, max:7152, phaseOutRate:.2106, start:{single:23350, hoh:23350, qw:23350, mfj:30300, mfs:0} },
+        3: { phaseIn:.45,   earnedMax:17880, max:8046, phaseOutRate:.2106, start:{single:23350, hoh:23350, qw:23350, mfj:30300, mfs:0} },
+      }
+    },
 
-      ctc: {
-        perChild: 2200,
-        refundableCapPerChild: 1700,
-        phaseoutThreshold: { single:200000, mfs:100000, hoh:200000, qw:200000, mfj:400000 },
-        phaseoutPer1000: 50,
-        earnedIncomeThreshold: 2500
-      },
-
-      aotc: {
-        phaseout: { single:[80000,90000], hoh:[80000,90000], mfs:[0,0], mfj:[160000,180000], qw:[160000,180000] },
-        refundableRate: 0.40,
-        refundableCapPerStudent: 1000,
-        perStudentMax: 2500
-      },
-
-      eitc: {
-        investmentIncomeLimit: 11950,
-        params: {
-          0: { phaseIn:.0765, earnedMax:8490,  max:649,  phaseOutRate:.0765, start:{single:10620, hoh:10620, mfs:0, qw:10620, mfj:17570} },
-          1: { phaseIn:.34,   earnedMax:12770, max:4328, phaseOutRate:.1598, start:{single:23350, hoh:23350, mfs:0, qw:23350, mfj:30300} },
-          2: { phaseIn:.40,   earnedMax:17880, max:7152, phaseOutRate:.2106, start:{single:23350, hoh:23350, mfs:0, qw:23350, mfj:30300} },
-          3: { phaseIn:.45,   earnedMax:17880, max:8046, phaseOutRate:.2106, start:{single:23350, hoh:23350, mfs:0, qw:23350, mfj:30300} },
-        }
-      },
-
-      adjustments: { iraLimit: 7000, studentLoanInterestCap: 2500 }
-    }
+    // Optional adjustments (kept, but you can remove if you truly want W-2 only)
+    adjustments: { iraLimit: 7000, studentLoanInterestCap: 2500 }
   };
 
   /* ===========================
      STATE & PERSISTENCE
      =========================== */
-  const LS_KEY = "caretax_refund_estimator_v2_w2only";
+  const LS_KEY = "caretax_refund_estimator_2025_v1";
+
+  function defaultW2(){
+    return {
+      employer:"",
+      // exact mode
+      wages:0,
+      fedWh:0,
+
+      // estimate toggles
+      estimatingW2: false,
+      estimatingWh: true, // if Box 2 missing, estimate by default
+
+      // estimate inputs
+      payType: "hourly",          // hourly | salary
+      hourlyRate: 20,
+      hoursPerWeek: 40,
+      salaryAmount: 40000,
+      payFrequency: "biweekly",   // weekly | biweekly | semimonthly | monthly
+      monthsWorked: 12,
+      federalWithholdingUsuallyTaken: "yes" // yes | no | unsure
+    };
+  }
 
   const defaultState = () => ({
     year: 2025,
+
     filingStatus: null, // "single" | "mfj" | "mfs" | "hoh" | "qw"
     ages: { taxpayer: null, spouse: null },
 
-    w2s: [{ employer:"", wages:0, fedWh:0 }],
+    w2s: [ defaultW2() ],
 
     adjustments: { iraDeduction:0, studentLoanInterest:0 },
 
-    dependents: { total:0, under17:0, eitcChildren:0 },
-
-    creditsSelected: { ctc:false, aotc:false, eitc:false },
-
-    aotc: {
-      studentCount: 0,
-      students: [{ tuitionNet:0, yearsClaimed:0, halfTime:true, felony:false }]
-    },
-
-    eitc: { investmentIncome:0 },
-
+    // quick interview
     interview: {
       hasDependents: "no",
       livedHalfCount: 0,
       under17Count: 0,
 
+      // SSN screening for CTC (simple)
+      kidsHaveSSN: "yes", // yes | no | unsure
+
+      // EITC
+      eitcQualKids: 0,
       investmentIncome: 0,
 
+      // AOTC
       paidTuition: "no",
       studentCount: 0,
       students: [{ tuitionNet:0, yearsClaimed:0, halfTime:true, felony:false }]
     },
+
+    // internal normalized
+    dependents: { total:0, under17:0, eitcChildren:0 },
+    creditsSelected: { ctc:false, aotc:false, eitc:false },
+    aotc: { studentCount:0, students:[] },
+    eitc: { investmentIncome:0 },
 
     stepPlan: ["welcome","status","income","interview","results"],
     currentStepIndex: 0
@@ -350,15 +304,13 @@
     try{
       const s = JSON.parse(localStorage.getItem(LS_KEY));
       if(!s || typeof s !== 'object') return defaultState();
-      const base = defaultState();
-      return deepMerge(base, s);
+      return deepMerge(defaultState(), s);
     }catch(e){ return defaultState(); }
   }
   function saveState(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
   function resetState(){
     localStorage.removeItem(LS_KEY);
     state = defaultState();
-    buildBasePlan();
     saveState();
     render();
   }
@@ -381,32 +333,54 @@
      =========================== */
   const $ = (sel, root=document) => root.querySelector(sel);
   const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
-  function fmtMoney(n){ if(n===null||n===undefined) return "$0"; return n.toLocaleString(undefined,{style:"currency",currency:"USD",maximumFractionDigits:0}); }
+  function fmtMoney(n){ if(n===null||n===undefined) return "$0"; return Number(n||0).toLocaleString(undefined,{style:"currency",currency:"USD",maximumFractionDigits:0}); }
   function parseMoney(str){ if(str===null||str===undefined) return 0; const num = +String(str).replace(/[^\d.-]/g,""); return isFinite(num)?num:0; }
   function clamp(n,min,max){ return Math.max(min, Math.min(max,n)); }
-  function yearCfg(){ return CONFIG_BY_YEAR[state.year] || CONFIG_BY_YEAR[2025]; }
   function labelFS(code){
-    return {single:"Single", mfj:"Married Filing Jointly", mfs:"Married Filing Separately", hoh:"Head of Household", qw:"Qualifying Widow(er)"}[code] || "—";
+    return {single:"Single", mfj:"Married Filing Jointly", mfs:"Married Filing Separately", hoh:"Head of Household", qw:"Qualifying Surviving Spouse"}[code] || "—";
   }
 
-  /* ===========================
-     CALCULATIONS (PURE)
-     =========================== */
-  function sumWages(w2s){ return w2s.reduce((a,b)=>a+(+b.wages||0),0); }
-  function sumWithholding(w2s){ return w2s.reduce((a,b)=>a+(+b.fedWh||0),0); }
+  // annualized wage estimate for a single W-2 card (if estimatingW2 enabled)
+  function estimateW2Wages(w){
+    const months = clamp(+w.monthsWorked||0, 0, 12);
+    if(months <= 0) return 0;
 
-  function calcAGI(_state, CONFIG){
+    if(w.payType === "salary"){
+      const annual = Math.max(0, +w.salaryAmount||0);
+      return Math.round(annual * (months/12));
+    }
+
+    // hourly
+    const rate = Math.max(0, +w.hourlyRate||0);
+    const hrs = clamp(+w.hoursPerWeek||0, 0, 80);
+    const weekly = rate * hrs;
+    // annualize by months worked (approx)
+    const annual = weekly * 52 * (months/12);
+    return Math.round(annual);
+  }
+
+  function effectiveWages(w){
+    const exact = Math.max(0, +w.wages||0);
+    if(!w.estimatingW2) return Math.round(exact);
+    const est = estimateW2Wages(w);
+    // if they typed wages anyway, prefer wages (some users will)
+    return Math.round(exact>0 ? exact : est);
+  }
+
+  function sumWages(w2s){ return Math.round(w2s.reduce((a,w)=>a + effectiveWages(w),0)); }
+  function sumEnteredWithholding(w2s){ return Math.round(w2s.reduce((a,w)=>a + Math.max(0,+w.fedWh||0),0)); }
+
+  function calcAGI(_state){
     const wages = sumWages(_state.w2s);
-    const ira = clamp(+_state.adjustments.iraDeduction||0, 0, CONFIG.adjustments.iraLimit);
-    const sli = clamp(+_state.adjustments.studentLoanInterest||0, 0, CONFIG.adjustments.studentLoanInterestCap);
-    const agi = Math.max(0, wages - ira - sli);
-    return Math.round(agi);
+    const ira = clamp(+_state.adjustments.iraDeduction||0, 0, CONFIG_2025.adjustments.iraLimit);
+    const sli = clamp(+_state.adjustments.studentLoanInterest||0, 0, CONFIG_2025.adjustments.studentLoanInterestCap);
+    return Math.round(Math.max(0, wages - ira - sli));
   }
 
-  function calcStandardDeduction(_state, CONFIG){
+  function calcStandardDeduction(_state){
     const status = _state.filingStatus || "single";
-    const base = CONFIG.stdDeduction[status] || 0;
-    const addCfg = CONFIG.ageAddOn;
+    const base = CONFIG_2025.stdDeduction[status] || 0;
+    const addCfg = CONFIG_2025.ageAddOn;
 
     const t65 = +(_state.ages.taxpayer||0) >= 65;
     const s65 = status==="mfj" ? +(_state.ages.spouse||0) >= 65 : false;
@@ -417,22 +391,25 @@
     return base + add;
   }
 
-  function calcTax(taxableIncome, filingStatus, CONFIG){
+  function calcTax(taxableIncome, filingStatus){
     let tax = 0;
     let prev = 0;
-    const brackets = CONFIG.brackets[filingStatus] || CONFIG.brackets.single;
-    let income = Math.max(0, taxableIncome);
+    const brackets = CONFIG_2025.brackets[filingStatus] || CONFIG_2025.brackets.single;
+    const income = Math.max(0, taxableIncome);
     for(const [limit, rate] of brackets){
       const amount = Math.min(income, limit - prev);
-      if(amount>0) tax += amount * rate;
+      if(amount > 0) tax += amount * rate;
       prev = limit;
       if(income <= limit) break;
     }
     return Math.round(tax);
   }
 
-  function calcCTC({MAGI, filingStatus, eligibleUnder17, earnedIncome, taxBeforeCredits}, CONFIG){
-    const cfg = CONFIG.ctc;
+  function calcCTC({MAGI, filingStatus, eligibleUnder17, earnedIncome, taxBeforeCredits, kidsHaveSSN}){
+    const cfg = CONFIG_2025.ctc;
+
+    // simple SSN gate: if "no" then we assume not eligible in this rough tool
+    if(kidsHaveSSN === "no") return { nonrefundable:0, refundable:0, note:"No SSN selected → CTC set to $0 in estimator." };
 
     const baseCredit = (eligibleUnder17||0) * cfg.perChild;
     const threshold = cfg.phaseoutThreshold[filingStatus] || cfg.phaseoutThreshold.single;
@@ -448,12 +425,11 @@
     const actcCap = (eligibleUnder17||0) * cfg.refundableCapPerChild;
     const refundable = Math.min(remaining, actcCap, actcMaxByIncome);
 
-    return { nonrefundable: nonref, refundable: refundable };
+    return { nonrefundable: Math.round(nonref), refundable: Math.round(refundable), note:"" };
   }
 
-  function calcAOTC(students, MAGI, filingStatus, CONFIG){
-    const cfg = CONFIG.aotc;
-    const [lo,hi] = cfg.phaseout[filingStatus] || [0,0];
+  function calcAOTC(students, MAGI, filingStatus){
+    const cfg = CONFIG_2025.aotc;
     const disallowedReasons = [];
 
     if(filingStatus==="mfs"){
@@ -476,8 +452,8 @@
       if(fel){ disallowedReasons.push(`Student ${i+1}: felony drug conviction rule`); return; }
 
       const first2k = Math.min(2000, tuition);
-      const next2k = Math.min(2000, Math.max(0, tuition - 2000));
-      const credit = first2k + 0.25 * next2k;
+      const next2k  = Math.min(2000, Math.max(0, tuition - 2000));
+      const credit  = first2k + 0.25 * next2k; // max 2500 if tuition >= 4000
 
       base += credit;
       refundableBase += Math.min(cfg.refundableCapPerStudent, credit * cfg.refundableRate);
@@ -486,6 +462,7 @@
 
     if(count===0) return { nonrefundable:0, refundable:0, disallowedReasons };
 
+    const [lo,hi] = cfg.phaseout[filingStatus] || [0,0];
     let factor = 1;
     if(hi>lo && MAGI>lo){
       if(MAGI>=hi) factor = 0;
@@ -501,15 +478,14 @@
     return { nonrefundable: Math.round(nonref), refundable: Math.round(refundable), disallowedReasons };
   }
 
-  function calcEITC(earnedIncome, AGI, filingStatus, qualChildren, investmentIncome, CONFIG){
-    const invLimit = CONFIG.eitc.investmentIncomeLimit;
+  function calcEITC(earnedIncome, AGI, filingStatus, qualChildren, investmentIncome){
+    const invLimit = CONFIG_2025.eitc.investmentIncomeLimit;
     if((investmentIncome||0) > invLimit) return 0;
+    if(filingStatus==="mfs") return 0;
 
     const n = Math.max(0, Math.min(3, +qualChildren||0));
-    const p = CONFIG.eitc.params[n];
+    const p = CONFIG_2025.eitc.params[n];
     if(!p) return 0;
-
-    if(filingStatus==="mfs") return 0;
 
     const income = Math.min(earnedIncome||0, AGI||0);
 
@@ -520,8 +496,7 @@
     const start = (p.start[filingStatus] ?? p.start.single);
     const poi = Math.max(0, (income - start) * p.phaseOutRate);
 
-    const credit = Math.max(0, maxCredit - poi);
-    return Math.round(credit);
+    return Math.round(Math.max(0, maxCredit - poi));
   }
 
   function orderCredits({taxBefore}, nonrefList, refundableList){
@@ -546,42 +521,88 @@
   }
 
   /* ===========================
-     GUIDED INTERVIEW → AUTO-SELECT CREDITS
+     GUIDED INTERVIEW → AUTO-SELECT
      =========================== */
   function normalizeInterviewToState(){
-    const inv = clamp(+state.interview.investmentIncome||0, 0, 9e15);
-    state.eitc.investmentIncome = inv;
+    const s = state;
 
-    const hasDeps = state.interview.hasDependents === "yes";
-    const livedHalf = hasDeps ? clamp(+state.interview.livedHalfCount||0, 0, 99) : 0;
-    const under17 = hasDeps ? clamp(+state.interview.under17Count||0, 0, livedHalf) : 0;
+    const hasDeps = s.interview.hasDependents === "yes";
+    const livedHalf = hasDeps ? clamp(+s.interview.livedHalfCount||0, 0, 99) : 0;
+    const under17 = hasDeps ? clamp(+s.interview.under17Count||0, 0, livedHalf) : 0;
 
-    state.dependents.total = livedHalf;
-    state.dependents.under17 = under17;
+    s.dependents.total = livedHalf;
+    s.dependents.under17 = under17;
 
-    const eitcKids = clamp(+state.dependents.eitcChildren||0, 0, livedHalf);
-    state.dependents.eitcChildren = eitcKids;
+    const eitcKids = clamp(+s.interview.eitcQualKids||0, 0, 99);
+    s.dependents.eitcChildren = eitcKids;
 
-    state.creditsSelected.ctc = under17 > 0;
-    state.creditsSelected.eitc = (state.filingStatus !== "mfs");
+    const inv = clamp(+s.interview.investmentIncome||0, 0, 9e15);
+    s.eitc.investmentIncome = inv;
 
-    const paidTuition = state.interview.paidTuition === "yes";
-    state.creditsSelected.aotc = paidTuition;
+    // auto-select credits (simple)
+    s.creditsSelected.ctc = (under17 > 0);
+    s.creditsSelected.eitc = (s.filingStatus !== "mfs"); // still can be 0 by calc rules
+    s.creditsSelected.aotc = (s.interview.paidTuition === "yes");
 
-    const sc = paidTuition ? clamp(+state.interview.studentCount||0, 0, 3) : 0;
-    state.aotc.studentCount = sc;
+    // AOTC students
+    const sc = (s.interview.paidTuition==="yes") ? clamp(+s.interview.studentCount||0, 0, 3) : 0;
+    s.aotc.studentCount = sc;
 
-    while(state.interview.students.length < sc) state.interview.students.push({tuitionNet:0,yearsClaimed:0,halfTime:true,felony:false});
-    if(state.interview.students.length > sc) state.interview.students = state.interview.students.slice(0, sc);
+    while(s.interview.students.length < sc) s.interview.students.push({tuitionNet:0,yearsClaimed:0,halfTime:true,felony:false});
+    if(s.interview.students.length > sc) s.interview.students = s.interview.students.slice(0, sc);
 
-    state.aotc.students = (state.interview.students||[]).slice(0, sc).map(s=>({
-      tuitionNet: Math.max(0, +s.tuitionNet||0),
-      yearsClaimed: clamp(+s.yearsClaimed||0, 0, 3),
-      halfTime: (s.halfTime===true || s.halfTime==="true"),
-      felony: (s.felony===true || s.felony==="true")
+    s.aotc.students = (s.interview.students||[]).slice(0, sc).map(st=>({
+      tuitionNet: Math.max(0, +st.tuitionNet||0),
+      yearsClaimed: clamp(+st.yearsClaimed||0, 0, 3),
+      halfTime: (st.halfTime===true || st.halfTime==="true"),
+      felony: (st.felony===true || st.felony==="true")
     }));
 
     saveState();
+  }
+
+  /* ===========================
+     WITHHOLDING ESTIMATION (ROUGH)
+     =========================== */
+  function computeEstimatedWithholding(totalTaxBefore, w2s){
+    // If user entered Box 2, use it. If not, estimate.
+    // Heuristic:
+    // - If federalWithholdingUsuallyTaken === "no" -> 0
+    // - If "yes"/"unsure" and estimatingWh=true -> allocate estimated taxBefore across missing W-2s
+    const entered = w2s.reduce((a,w)=>a + Math.max(0,+w.fedWh||0),0);
+
+    const missing = w2s
+      .map((w,idx)=>({w,idx}))
+      .filter(x => (Math.max(0,+x.w.fedWh||0) === 0) && (x.w.estimatingWh === true));
+
+    if(missing.length === 0) return { total: Math.round(entered), estimatedPart: 0, usedEstimate:false };
+
+    // decide which missing W-2s should have withholding
+    const eligibleMissing = missing.filter(x=>{
+      const flag = (x.w.federalWithholdingUsuallyTaken||"yes");
+      return flag !== "no";
+    });
+
+    if(eligibleMissing.length === 0){
+      return { total: Math.round(entered), estimatedPart: 0, usedEstimate: false };
+    }
+
+    // estimate remaining withholding as (totalTaxBefore - entered) but never below 0
+    // (this keeps things consistent: if you didn't enter box 2, we assume it was enough to cover tax before credits)
+    const remaining = Math.max(0, Math.round(totalTaxBefore - entered));
+
+    // allocate proportionally by wages for those missing
+    const sumMissingWages = eligibleMissing.reduce((a,x)=>a + effectiveWages(x.w),0) || 1;
+    let estParts = new Array(w2s.length).fill(0);
+    eligibleMissing.forEach(x=>{
+      const share = effectiveWages(x.w) / sumMissingWages;
+      estParts[x.idx] = Math.round(remaining * share);
+    });
+
+    const estimatedPart = estParts.reduce((a,b)=>a+b,0);
+    const total = Math.round(entered + estimatedPart);
+
+    return { total, estimatedPart, usedEstimate:true };
   }
 
   /* ===========================
@@ -593,7 +614,7 @@
 
     switch(step){
       case "welcome":
-        if(![2023,2024,2025].includes(+s.year)) errors.push("Year is required (2023–2025).");
+        // nothing
         break;
 
       case "status":
@@ -607,7 +628,14 @@
       case "income":
         if(!s.w2s.length) errors.push("Add at least one W-2.");
         s.w2s.forEach((w,i)=>{
-          if(isNaN(+w.wages) || +w.wages<0) errors.push(`W-2 #${i+1}: wages must be ≥ 0`);
+          if(w.estimatingW2){
+            // allow blank exact wages, but require enough estimate inputs to compute >0 OR allow 0
+            const est = estimateW2Wages(w);
+            const exact = Math.max(0,+w.wages||0);
+            if(est<=0 && exact<=0) errors.push(`W-2 #${i+1}: enter wages OR use the estimate inputs to estimate wages.`);
+          } else {
+            if(isNaN(+w.wages) || +w.wages<0) errors.push(`W-2 #${i+1}: wages must be ≥ 0`);
+          }
           if(isNaN(+w.fedWh) || +w.fedWh<0) errors.push(`W-2 #${i+1}: withholding must be ≥ 0`);
         });
         if(+s.adjustments.iraDeduction<0) errors.push("IRA deduction cannot be negative.");
@@ -620,17 +648,10 @@
         if(+s.interview.under17Count<0) errors.push("Under-17 count can’t be negative.");
         if(+s.interview.under17Count > +s.interview.livedHalfCount) errors.push("Under-17 count can’t be more than the dependents who lived with you > half the year.");
         if(+s.interview.investmentIncome<0) errors.push("Investment income can’t be negative.");
-
         if(!["yes","no"].includes(s.interview.paidTuition)) errors.push("Please answer the college tuition question.");
         if(s.interview.paidTuition==="yes"){
           const sc = clamp(+s.interview.studentCount||0, 0, 3);
           if(sc<=0) errors.push("If you paid tuition, select the number of students (1–3).");
-          for(let i=0;i<sc;i++){
-            const st = (s.interview.students||[])[i];
-            if(!st){ errors.push(`Student ${i+1} missing.`); continue; }
-            if(+st.yearsClaimed<0 || +st.yearsClaimed>3) errors.push(`Student ${i+1}: years claimed must be 0–3.`);
-            /* ✅ do NOT block Next for blank tuition; treated as 0 in estimator */
-          }
         }
         break;
     }
@@ -638,20 +659,15 @@
   }
 
   /* ===========================
-     STEP PLAN & NAVIGATION
+     STEP NAV
      =========================== */
-  function buildBasePlan(){
-    state.stepPlan = ["welcome","status","income","interview","results"];
-  }
   function currentStep(){ return state.stepPlan[state.currentStepIndex] || "welcome"; }
 
   function goNext(){
     const step = currentStep();
     const errs = validate(step);
     if(errs.length){ showErrors(errs); return; }
-
     if(step==="interview"){ normalizeInterviewToState(); }
-
     if(state.currentStepIndex < state.stepPlan.length-1){
       state.currentStepIndex++;
       saveState();
@@ -667,7 +683,7 @@
   }
 
   /* ===========================
-     UI RENDERING
+     UI
      =========================== */
   const mainCol = document.getElementById('mainCol');
   const stepText = document.getElementById('stepText');
@@ -724,6 +740,7 @@
         goNext();
       }
     }
+
     window.scrollTo({top:0,behavior:'smooth'});
   }
 
@@ -778,9 +795,9 @@
     });
 
     const addW2 = $('#addW2');
-    if(addW2) addW2.onclick = ()=>{ state.w2s.push({employer:"",wages:0,fedWh:0}); saveState(); render(); };
+    if(addW2) addW2.onclick = ()=>{ state.w2s.push(defaultW2()); saveState(); render(); };
     $$('.removeW2', scope).forEach((btn,idx)=>{
-      btn.onclick = ()=>{ state.w2s.splice(idx,1); if(!state.w2s.length) state.w2s=[{employer:"",wages:0,fedWh:0}]; saveState(); render(); };
+      btn.onclick = ()=>{ state.w2s.splice(idx,1); if(!state.w2s.length) state.w2s=[defaultW2()]; saveState(); render(); };
     });
 
     const downloadSummary = $('#downloadSummary');
@@ -788,10 +805,6 @@
     const downloadChecklist = $('#downloadChecklist');
     if(downloadChecklist) downloadChecklist.onclick = ()=>{ preparePrint('checklist'); };
 
-    const presets = $$('.preset', scope);
-    presets.forEach(btn=> btn.onclick = ()=> applyPreset(btn.dataset.preset) );
-
-    /* ✅ Start over inside results (no duplicate id) */
     $$('[data-action="reset"]', scope).forEach(btn=>{
       btn.onclick = (e)=>{ e.preventDefault(); resetState(); };
     });
@@ -812,34 +825,42 @@
     if(el.dataset.triggerRender) return render();
 
     const bind = el.dataset.bind || "";
-    if(bind === "interview.hasDependents" || bind === "interview.paidTuition" || bind === "filingStatus"){
+    if(
+      bind === "interview.hasDependents" ||
+      bind === "interview.paidTuition" ||
+      bind === "filingStatus"
+    ){
+      render();
+    }
+
+    // W-2 estimate toggles affect layout
+    if(bind.includes("w2s.") && (bind.endsWith(".estimatingW2") || bind.endsWith(".estimatingWh") || bind.endsWith(".payType"))){
       render();
     }
   }
 
   function renderStep(step){
-    const cfg = yearCfg();
     switch(step){
       case "welcome":
         return `
           <h3 class="title">Welcome! Let’s estimate your federal refund.</h3>
           <div class="banner" role="note">
-            <strong>W-2 only.</strong>
+            <strong>2025 only.</strong>
             <div>
-              Federal estimate only. Not tax advice.
-              <div class="help">This tool uses W-2 Box 1 wages + W-2 Box 2 federal withholding. No self-employment, no rental, no capital gains.</div>
+              W-2 jobs only. Federal estimate only. Not tax advice.
+              <div class="help">You can add multiple W-2s. If you don’t have your W-2, use “Estimate my W-2” and we’ll still give a rough result.</div>
             </div>
           </div>
 
-          <div class="row mt12">
-            <label for="yearSel">Filing Year</label>
-            <select id="yearSel" data-bind="year" aria-label="Filing Year">
-              <option value="2025" ${state.year==2025?'selected':''}>2025</option>
-              <option value="2024" ${state.year==2024?'selected':''}>2024</option>
-              <option value="2023" ${state.year==2023?'selected':''}>2023</option>
-            </select>
-            <div class="help">Default is 2025 (for filing in early 2026).</div>
+          <div class="info mt12" role="note">
+            <strong>Important:</strong> This is a rough estimate. Exact refund depends on full eligibility rules, exact withholding (W-2 Box 2), and other income/credits not included.
           </div>
+
+          <div class="hr"></div>
+
+          <div class="pill">Standard Deduction & Brackets: 2025</div>
+          <div class="help mt8">This estimator uses 2025 federal standard deduction, brackets, CTC/ACTC, EITC, and AOTC logic.</div>
+
           <div id="errorArea" class="mt8" tabindex="-1" aria-live="polite"></div>
         `;
 
@@ -849,7 +870,7 @@
           <div class="row">
             <div class="radio-group" role="radiogroup" aria-label="Filing Status">
               ${["single","mfj","mfs","hoh","qw"].map(code=>{
-                const label = {single:"Single", mfj:"Married Filing Jointly", mfs:"Married Filing Separately", hoh:"Head of Household", qw:"Qualifying Widow(er)"}[code];
+                const label = {single:"Single", mfj:"Married Filing Jointly", mfs:"Married Filing Separately", hoh:"Head of Household", qw:"Qualifying Surviving Spouse"}[code];
                 return `
                 <label class="radio-option">
                   <input type="radio" name="filingStatus" data-bind="filingStatus" value="${code}" ${state.filingStatus===code?'checked':''} data-trigger-render="1">
@@ -860,7 +881,7 @@
 
             <div class="grid2">
               <div>
-                <label for="ageT">Taxpayer age</label>
+                <label for="ageT">Your age</label>
                 <input id="ageT" type="number" min="0" max="120" data-bind="ages.taxpayer" value="${state.ages.taxpayer??''}">
                 <div class="help">Age helps estimate extra standard deduction at 65+.</div>
               </div>
@@ -874,7 +895,7 @@
           </div>
 
           ${state.filingStatus==="mfs" ? `
-            <div class="info mt12">Note: Married Filing Separately often disqualifies or limits certain credits (like EITC and AOTC). This estimator will reflect those limits.</div>
+            <div class="info mt12">Note: Married Filing Separately often disqualifies or limits certain credits (like EITC and AOTC). This estimator reflects those limits.</div>
           ` : ''}
 
           <div id="errorArea" class="mt8" tabindex="-1" aria-live="polite"></div>
@@ -882,49 +903,145 @@
 
       case "income":
         return `
-          <h3 class="title">Income — W-2 Only</h3>
-          <div class="row">
+          <h3 class="title">Income — Add Your W-2(s)</h3>
+          <div class="info" role="note">
+            <strong>Easy option:</strong> If you don’t have your W-2, turn on <strong>“Estimate my W-2”</strong>. We’ll estimate wages + withholding (very rough).
+          </div>
+
+          <div class="row mt12">
             ${state.w2s.map((w,idx)=>`
               <div class="w2-row">
-                <div class="grid3">
+                <div class="space-between">
                   <div>
-                    <label>Employer</label>
+                    <strong>W-2 #${idx+1}</strong>
+                    <div class="help">${w.estimatingW2 ? "Using estimate inputs" : "Using exact Box 1 / Box 2 (if entered)"}</div>
+                  </div>
+                  <button type="button" class="btn small secondary removeW2">Remove</button>
+                </div>
+
+                <div class="mt12">
+                  <label class="radio-option" style="cursor:pointer">
+                    <input type="checkbox" data-bind="w2s.${idx}.estimatingW2" ${w.estimatingW2?'checked':''} data-trigger-render="1">
+                    <span><strong>Estimate my W-2 (I don’t have it)</strong></span>
+                  </label>
+                </div>
+
+                <div class="grid3 mt12">
+                  <div>
+                    <label>Employer (optional)</label>
                     <input type="text" data-bind="w2s.${idx}.employer" value="${w.employer||''}" placeholder="(optional)">
                     <div class="help">Just for your reference.</div>
                   </div>
+
                   <div>
-                    <label>Wages (W-2 Box 1)</label>
-                    <input class="money" data-money="1" data-bind="w2s.${idx}.wages" value="${(w.wages?Number(w.wages).toLocaleString(): '')}" inputmode="numeric">
-                    <div class="help">Use Box 1 (not Box 3/5).</div>
+                    <label>Wages (Box 1) ${w.estimatingW2 ? '<span class="tip" title="Optional if you are estimating">i</span>' : ''}</label>
+                    <input class="money" data-money="1" data-bind="w2s.${idx}.wages" value="${(w.wages?Number(w.wages).toLocaleString(): '')}" inputmode="numeric" placeholder="${w.estimatingW2 ? 'Leave blank if estimating' : ''}">
+                    <div class="help">${w.estimatingW2 ? "If you know it, enter it. If not, we’ll estimate below." : "Use W-2 Box 1 (not Box 3/5)."}</div>
                   </div>
+
                   <div>
-                    <label>Federal withheld (W-2 Box 2)</label>
-                    <input class="money" data-money="1" data-bind="w2s.${idx}.fedWh" value="${(w.fedWh?Number(w.fedWh).toLocaleString(): '')}" inputmode="numeric">
-                    <div class="help">Federal only (not state).</div>
+                    <label>Federal withheld (Box 2) <span class="tip" title="Optional — we can estimate if blank">i</span></label>
+                    <input class="money" data-money="1" data-bind="w2s.${idx}.fedWh" value="${(w.fedWh?Number(w.fedWh).toLocaleString(): '')}" inputmode="numeric" placeholder="(optional)">
+                    <div class="help">If blank, we can estimate withholding (rough).</div>
                   </div>
                 </div>
-                <div class="mt8">
-                  <button type="button" class="btn small secondary removeW2">Remove</button>
+
+                <div class="mt12">
+                  <label class="radio-option" style="cursor:pointer">
+                    <input type="checkbox" data-bind="w2s.${idx}.estimatingWh" ${w.estimatingWh?'checked':''} data-trigger-render="1">
+                    <span>Estimate federal withholding if Box 2 is blank</span>
+                  </label>
+                  <div class="help">If you typed Box 2, we use it exactly. If it’s blank and this is on, we estimate.</div>
                 </div>
+
+                ${(w.estimatingW2) ? `
+                  <div class="section mt12">
+                    <p class="section-title"><strong>W-2 Estimate Inputs</strong></p>
+
+                    <div class="grid3">
+                      <div>
+                        <label>Pay type</label>
+                        <select data-bind="w2s.${idx}.payType" data-trigger-render="1">
+                          <option value="hourly" ${w.payType==="hourly"?'selected':''}>Hourly</option>
+                          <option value="salary" ${w.payType==="salary"?'selected':''}>Salary</option>
+                        </select>
+                        <div class="help">Choose what best matches your job.</div>
+                      </div>
+
+                      ${w.payType==="hourly" ? `
+                        <div>
+                          <label>Hourly rate</label>
+                          <input type="number" min="0" step="0.01" data-bind="w2s.${idx}.hourlyRate" value="${+w.hourlyRate||0}">
+                          <div class="help">Example: 18.50</div>
+                        </div>
+                        <div>
+                          <label>Hours per week</label>
+                          <input type="number" min="0" max="80" data-bind="w2s.${idx}.hoursPerWeek" value="${+w.hoursPerWeek||0}">
+                          <div class="help">Example: 40</div>
+                        </div>
+                      ` : `
+                        <div>
+                          <label>Annual salary</label>
+                          <input class="money" data-money="1" data-bind="w2s.${idx}.salaryAmount" value="${(+w.salaryAmount?Number(w.salaryAmount).toLocaleString(): '')}">
+                          <div class="help">Before tax (gross).</div>
+                        </div>
+                        <div>
+                          <label>Pay frequency</label>
+                          <select data-bind="w2s.${idx}.payFrequency">
+                            <option value="weekly" ${w.payFrequency==="weekly"?'selected':''}>Weekly</option>
+                            <option value="biweekly" ${w.payFrequency==="biweekly"?'selected':''}>Biweekly</option>
+                            <option value="semimonthly" ${w.payFrequency==="semimonthly"?'selected':''}>Twice a month</option>
+                            <option value="monthly" ${w.payFrequency==="monthly"?'selected':''}>Monthly</option>
+                          </select>
+                          <div class="help">Used only for rough withholding behavior.</div>
+                        </div>
+                      `}
+                    </div>
+
+                    <div class="grid3 mt12">
+                      <div>
+                        <label>Months worked in 2025</label>
+                        <input type="number" min="0" max="12" data-bind="w2s.${idx}.monthsWorked" value="${clamp(+w.monthsWorked||0,0,12)}">
+                        <div class="help">If not sure, leave 12.</div>
+                      </div>
+                      <div>
+                        <label>Did your job usually take federal taxes out?</label>
+                        <select data-bind="w2s.${idx}.federalWithholdingUsuallyTaken">
+                          <option value="yes" ${w.federalWithholdingUsuallyTaken==="yes"?'selected':''}>Yes</option>
+                          <option value="no" ${w.federalWithholdingUsuallyTaken==="no"?'selected':''}>No</option>
+                          <option value="unsure" ${w.federalWithholdingUsuallyTaken==="unsure"?'selected':''}>Not sure</option>
+                        </select>
+                        <div class="help">If you pick “No”, we estimate $0 withholding for this W-2.</div>
+                      </div>
+                      <div>
+                        <label>Estimated wages (preview)</label>
+                        <input type="text" value="${fmtMoney(effectiveWages(w))}" disabled>
+                        <div class="help">We’ll use this for the estimate.</div>
+                      </div>
+                    </div>
+                  </div>
+                ` : ''}
+
               </div>
             `).join('')}
-            <button id="addW2" class="btn small primary" type="button">Add W-2</button>
 
-            <div class="section">
-              <p class="section-title"><strong>Optional adjustments (simple)</strong></p>
+            <button id="addW2" class="btn small primary" type="button">Add another W-2</button>
+
+            <div class="section mt12">
+              <p class="section-title"><strong>Optional (leave blank if unsure)</strong></p>
               <div class="grid2">
                 <div>
-                  <label>Traditional IRA deduction <span class="tip" title="If deductible, it may reduce AGI">i</span></label>
+                  <label>Traditional IRA deduction</label>
                   <input class="money" data-money="1" data-bind="adjustments.iraDeduction" value="${(state.adjustments.iraDeduction?Number(state.adjustments.iraDeduction).toLocaleString(): '')}">
-                  <div class="help">We cap this input at ${fmtMoney(cfg.adjustments.iraLimit)} in calculations.</div>
+                  <div class="help">We cap this at ${fmtMoney(CONFIG_2025.adjustments.iraLimit)}.</div>
                 </div>
                 <div>
-                  <label>Student loan interest <span class="tip" title="If eligible, it may reduce AGI">i</span></label>
+                  <label>Student loan interest</label>
                   <input class="money" data-money="1" data-bind="adjustments.studentLoanInterest" value="${(state.adjustments.studentLoanInterest?Number(state.adjustments.studentLoanInterest).toLocaleString(): '')}">
-                  <div class="help">Max considered: ${fmtMoney(cfg.adjustments.studentLoanInterestCap)}.</div>
+                  <div class="help">Max considered: ${fmtMoney(CONFIG_2025.adjustments.studentLoanInterestCap)}.</div>
                 </div>
               </div>
-              <div class="help mt8">If you’re not sure, leave these as 0. Most W-2-only estimates still work fine without them.</div>
+              <div class="help mt8">If you’re not sure, leave these as 0. Your estimate still works.</div>
             </div>
           </div>
 
@@ -936,91 +1053,97 @@
         return `
           <h3 class="title">Quick Credit Interview (Easy Mode)</h3>
           <div class="info" role="note">
-            Answer a few simple questions. We’ll automatically check the credits you might qualify for and skip the rest.
+            Answer a few simple questions. We’ll automatically check common credits and estimate them.
           </div>
 
           <div class="stack mt12">
 
             <div class="subcard">
-              <p class="section-title"><strong>Dependents / Children</strong></p>
+              <p class="section-title"><strong>Kids / Dependents</strong></p>
 
-              <label>Do you have any children or dependents you claim on your taxes?</label>
+              <label>Do you claim any kids or dependents?</label>
               <div class="radio-group mt8">
                 <label class="radio-option">
-                  <input id="intHasDependentsYes" type="radio" name="intHasDependents"
-                    data-bind="interview.hasDependents" value="yes"
+                  <input type="radio" name="intHasDependents" data-bind="interview.hasDependents" value="yes"
                     ${state.interview.hasDependents==="yes"?'checked':''} data-trigger-render="1">
                   <span>Yes</span>
                 </label>
                 <label class="radio-option">
-                  <input id="intHasDependentsNo" type="radio" name="intHasDependents"
-                    data-bind="interview.hasDependents" value="no"
+                  <input type="radio" name="intHasDependents" data-bind="interview.hasDependents" value="no"
                     ${state.interview.hasDependents==="no"?'checked':''} data-trigger-render="1">
                   <span>No</span>
                 </label>
               </div>
-              <div class="help mt8">If you’re unsure, use your best estimate—this is just a refund estimate.</div>
 
               ${state.interview.hasDependents==="yes" ? `
                 <div class="grid2 mt12">
                   <div>
                     <label>How many lived with you more than half the year?</label>
                     <input type="number" min="0" data-bind="interview.livedHalfCount" value="${+state.interview.livedHalfCount||0}">
-                    <div class="help">This helps with credits like EITC/CTC (basic screening).</div>
+                    <div class="help">Used for basic screening in this estimator.</div>
                   </div>
                   <div>
-                    <label>How many were under 17 on Dec 31?</label>
+                    <label>How many were under 17 on Dec 31, 2025?</label>
                     <input type="number" min="0" data-bind="interview.under17Count" value="${+state.interview.under17Count||0}">
-                    <div class="help">Under 17 is the main requirement for the Child Tax Credit.</div>
+                    <div class="help">Under 17 is the main CTC rule.</div>
                   </div>
                 </div>
 
                 <div class="mt12">
-                  <label>How many “qualifying children” do you want us to check for EITC?</label>
-                  <input type="number" min="0" data-bind="dependents.eitcChildren" value="${+state.dependents.eitcChildren||0}">
-                  <div class="help">Usually children who meet age/residency relationship rules. If unsure, enter the number who lived with you more than half the year.</div>
+                  <label>Do the kids you’re counting for CTC have Social Security numbers?</label>
+                  <select data-bind="interview.kidsHaveSSN">
+                    <option value="yes" ${state.interview.kidsHaveSSN==="yes"?'selected':''}>Yes</option>
+                    <option value="no" ${state.interview.kidsHaveSSN==="no"?'selected':''}>No</option>
+                    <option value="unsure" ${state.interview.kidsHaveSSN==="unsure"?'selected':''}>Not sure</option>
+                  </select>
+                  <div class="help">If you choose “No”, this estimator sets CTC to $0 (rules are strict).</div>
                 </div>
               ` : `
                 <div class="mt12">
-                  <label>Qualifying children for EITC</label>
-                  <input type="number" min="0" data-bind="dependents.eitcChildren" value="${+state.dependents.eitcChildren||0}">
-                  <div class="help">If none, leave 0. Some people can qualify for EITC with no children (rules apply).</div>
+                  <label>Kids have SSNs (CTC)</label>
+                  <select data-bind="interview.kidsHaveSSN">
+                    <option value="yes" ${state.interview.kidsHaveSSN==="yes"?'selected':''}>Yes</option>
+                    <option value="no" ${state.interview.kidsHaveSSN==="no"?'selected':''}>No</option>
+                    <option value="unsure" ${state.interview.kidsHaveSSN==="unsure"?'selected':''}>Not sure</option>
+                  </select>
+                  <div class="help">If you have no kids, this won’t matter.</div>
                 </div>
               `}
             </div>
 
             <div class="subcard">
               <p class="section-title"><strong>Earned Income Credit (EITC)</strong></p>
-              <div class="help">Because this tool is W-2 only, you already have earned income from a job.</div>
+              ${state.filingStatus==="mfs" ? `<div class="info">EITC is generally not allowed for Married Filing Separately. This estimator will show $0.</div>` : ''}
 
-              <label class="mt8">About how much investment income did you have? (interest/dividends/stock profits)</label>
-              <input class="money" data-money="1" data-bind="interview.investmentIncome" value="${(+state.interview.investmentIncome?Number(state.interview.investmentIncome).toLocaleString(): '')}">
-              <div class="help">If you don’t have any, leave it blank or 0. This is used only for the EITC investment-income limit check.</div>
+              <div class="mt12">
+                <label>How many qualifying kids for EITC should we check?</label>
+                <input type="number" min="0" data-bind="interview.eitcQualKids" value="${+state.interview.eitcQualKids||0}">
+                <div class="help">If unsure, use the number who lived with you more than half the year.</div>
+              </div>
 
-              ${state.filingStatus==="mfs" ? `
-                <div class="info mt12">EITC is generally not allowed for Married Filing Separately. We will show $0 for EITC under MFS.</div>
-              ` : ''}
+              <div class="mt12">
+                <label>Investment income (interest/dividends/stock profits) in 2025</label>
+                <input class="money" data-money="1" data-bind="interview.investmentIncome" value="${(+state.interview.investmentIncome?Number(state.interview.investmentIncome).toLocaleString(): '')}">
+                <div class="help">If this is over ${fmtMoney(CONFIG_2025.eitc.investmentIncomeLimit)}, EITC becomes $0.</div>
+              </div>
             </div>
 
             <div class="subcard">
               <p class="section-title"><strong>College Tuition (AOTC)</strong></p>
 
-              <label>Did you pay college tuition in this tax year for yourself or a dependent?</label>
+              <label>Did you pay college tuition in 2025 (for you or a dependent)?</label>
               <div class="radio-group mt8">
                 <label class="radio-option">
-                  <input id="intPaidTuitionYes" type="radio" name="intPaidTuition"
-                    data-bind="interview.paidTuition" value="yes"
+                  <input type="radio" name="intPaidTuition" data-bind="interview.paidTuition" value="yes"
                     ${state.interview.paidTuition==="yes"?'checked':''} data-trigger-render="1">
                   <span>Yes</span>
                 </label>
                 <label class="radio-option">
-                  <input id="intPaidTuitionNo" type="radio" name="intPaidTuition"
-                    data-bind="interview.paidTuition" value="no"
+                  <input type="radio" name="intPaidTuition" data-bind="interview.paidTuition" value="no"
                     ${state.interview.paidTuition==="no"?'checked':''} data-trigger-render="1">
                   <span>No</span>
                 </label>
               </div>
-              <div class="help mt8">Tuition should be net of scholarships/grants paid tax-free.</div>
 
               ${state.interview.paidTuition==="yes" ? `
                 <div class="grid2 mt12">
@@ -1029,11 +1152,11 @@
                     <select id="intStudentCount" data-bind="interview.studentCount">
                       ${[0,1,2,3].map(n=>`<option value="${n}" ${(+state.interview.studentCount===n)?'selected':''}>${n}</option>`).join('')}
                     </select>
-                    <div class="help">AOTC is limited to 4 total years per student.</div>
+                    <div class="help">AOTC max is based on up to $4,000 qualified expenses per student.</div>
                   </div>
                   <div>
-                    <label>Reminder (quick)</label>
-                    <div class="info">AOTC isn’t allowed for Married Filing Separately. If you selected MFS earlier, AOTC will be $0.</div>
+                    <label>Quick note</label>
+                    <div class="info">AOTC isn’t allowed for Married Filing Separately (MFS).</div>
                   </div>
                 </div>
 
@@ -1046,12 +1169,12 @@
                         <div>
                           <label>Tuition paid (net)</label>
                           <input class="money" data-money="1" data-bind="interview.students.${i}.tuitionNet" value="${st.tuitionNet?Number(st.tuitionNet).toLocaleString():''}">
-                          <div class="help">We consider up to $4,000 per student for max AOTC.</div>
+                          <div class="help">If unsure, estimate. We cap at $4,000 for max AOTC.</div>
                         </div>
                         <div>
                           <label>Years AOTC already claimed (0–3)</label>
                           <input type="number" min="0" max="3" data-bind="interview.students.${i}.yearsClaimed" value="${+st.yearsClaimed||0}">
-                          <div class="help">If it’s already been claimed 4 years, AOTC is not allowed.</div>
+                          <div class="help">AOTC is limited to 4 years total per student.</div>
                         </div>
                         <div>
                           <label>At least half-time?</label>
@@ -1063,7 +1186,7 @@
                         </div>
                       </div>
                       <div class="mt8">
-                        <label>Felony drug conviction before end of the year?</label>
+                        <label>Felony drug conviction before end of 2025?</label>
                         <select data-bind="interview.students.${i}.felony">
                           <option value="false" ${(st.felony===false || st.felony==="false")?'selected':''}>No</option>
                           <option value="true" ${(st.felony===true || st.felony==="true")?'selected':''}>Yes</option>
@@ -1079,7 +1202,7 @@
           </div>
 
           <div class="mt12 help">
-            Next, we’ll calculate your estimate using these answers and automatically apply: CTC (if under 17), EITC (if applicable), and AOTC (if tuition paid).
+            Next, we’ll calculate your estimate and show your estimated refund/owed amount.
           </div>
 
           <div id="errorArea" class="mt8" tabindex="-1" aria-live="polite"></div>
@@ -1090,8 +1213,9 @@
         const forms = buildFormsChecklist(state, results);
         return `
           <h3 class="title">Your Estimated Results</h3>
-          <div class="chip">Year ${state.year}</div>
+          <div class="chip">Tax Year 2025</div>
           <div class="chip">${labelFS(state.filingStatus)}</div>
+
           <div class="card print-section-summary" style="border:1px dashed #cfe8e4">
             ${renderSummary(results)}
           </div>
@@ -1111,11 +1235,8 @@
             </div>
           </div>
 
-          <div class="acceptance">
-            <button class="btn small primary preset" data-preset="1" type="button">Preset 1: Single $40k W-2, $3k wh, no credits</button>
-            <button class="btn small primary preset" data-preset="2" type="button">Preset 2: MFJ $55k, 2 kids, CTC + EITC</button>
-            <button class="btn small primary preset" data-preset="3" type="button">Preset 3: HOH $32k, 1 student, AOTC</button>
-            <button class="btn small primary preset" data-preset="4" type="button">Preset 4: Single $90k, try all credits</button>
+          <div class="info mt12">
+            <strong>Reminder:</strong> This is an estimate only. If you didn’t enter W-2 Box 2, we estimated withholding and your refund could be higher or lower.
           </div>
 
           <div id="errorArea" class="mt8" tabindex="-1" aria-live="polite"></div>
@@ -1129,13 +1250,19 @@
     const canvasId = "chart";
     setTimeout(()=> drawChart(canvasId, r), 0);
 
+    const whNote = r.withholdingUsedEstimate
+      ? `<div class="help mt8">Withholding includes an estimate of ${fmtMoney(r.withholdingEstimatedPart)} because Box 2 was blank on one or more W-2s.</div>`
+      : `<div class="help mt8">Withholding is based on what you entered from W-2 Box 2.</div>`;
+
+    const ctcNote = (r.ctc && r.ctc.note) ? `<div class="help mt8">${r.ctc.note}</div>` : "";
+
     return `
       <div class="grid2">
         <div>
           <div class="totals-grid">
             <div>Filing status</div><div class="kpi">${labelFS(state.filingStatus)}</div>
-            <div>W-2 wages total</div><div class="kpi">${fmtMoney(r.wages)}</div>
-            <div>Withholding total</div><div class="kpi">${fmtMoney(r.withholding)}</div>
+            <div>W-2 wages total (est.)</div><div class="kpi">${fmtMoney(r.wages)}</div>
+            <div>Withholding total (est.)</div><div class="kpi">${fmtMoney(r.withholding)}</div>
             <div>AGI</div><div class="kpi">${fmtMoney(r.AGI)}</div>
             <div>Standard deduction</div><div class="kpi">${fmtMoney(r.stdDed)}</div>
             <div>Taxable income</div><div class="kpi">${fmtMoney(r.taxable)}</div>
@@ -1148,11 +1275,14 @@
             <div>Tax after nonrefundable credits</div><div class="kpi">${fmtMoney(r.taxAfterNonref)}</div>
             <div>Refundable credits total</div><div class="kpi">${fmtMoney(r.refundableTotal)}</div>
             <div>Total payments (withholding + refundable credits)</div><div class="kpi">${fmtMoney(r.totalPayments)}</div>
-            <div>Estimated result</div><div class="kpi">${finalLabel}</div>
+            <div><strong>Estimated result</strong></div><div class="kpi">${finalLabel}</div>
           </div>
 
+          ${whNote}
+          ${ctcNote}
+
           <div class="help mt12">
-            Reminder: This is a federal estimate based on your inputs. Exact results can differ (e.g., eligibility rules, additional income/withholding, credits, prior-year carryovers).
+            This is a federal estimate based on your inputs. Exact results can differ (eligibility details, exact withholding, other income/credits, prior-year items).
           </div>
         </div>
         <div>
@@ -1163,15 +1293,24 @@
   }
 
   function updateTotals(){
-    const cfg = yearCfg();
     const wages = sumWages(state.w2s);
-    const wh = sumWithholding(state.w2s);
-    const agi = calcAGI(state, cfg);
-    const sd = calcStandardDeduction(state, cfg);
+    const AGI = calcAGI(state);
+    const sd = calcStandardDeduction(state);
+    const taxable = Math.max(0, AGI - sd);
+    const taxBefore = calcTax(taxable, state.filingStatus||"single");
+
+    const whCalc = computeEstimatedWithholding(taxBefore, state.w2s);
+
     $('#rtWages').textContent = fmtMoney(wages);
-    $('#rtWh').textContent = fmtMoney(wh);
-    $('#rtAGI').textContent = fmtMoney(agi);
+    $('#rtWh').textContent = fmtMoney(whCalc.total);
+    $('#rtAGI').textContent = fmtMoney(AGI);
     $('#rtStdDed').textContent = fmtMoney(sd);
+
+    const note = [];
+    const anyEstimateW2 = state.w2s.some(w=>w.estimatingW2 && (Math.max(0,+w.wages||0)===0));
+    if(anyEstimateW2) note.push("Some wages are estimated.");
+    if(whCalc.usedEstimate) note.push("Some withholding is estimated (Box 2 blank).");
+    $('#rtNote').textContent = note.length ? note.join(" ") : "";
   }
 
   function drawChart(id, results){
@@ -1207,46 +1346,49 @@
      RESULTS PIPELINE
      =========================== */
   function computeResults(){
-    const cfg = yearCfg();
+    normalizeInterviewToState();
 
     const wages = sumWages(state.w2s);
-    const withholding = sumWithholding(state.w2s);
-
-    const AGI = calcAGI(state, cfg);
-    const stdDed = calcStandardDeduction(state, cfg);
+    const AGI = calcAGI(state);
+    const stdDed = calcStandardDeduction(state);
     const taxable = Math.max(0, AGI - stdDed);
-    const taxBefore = calcTax(taxable, state.filingStatus||"single", cfg);
+    const taxBefore = calcTax(taxable, state.filingStatus||"single");
 
-    normalizeInterviewToState();
+    // Withholding total (entered + estimated)
+    const whCalc = computeEstimatedWithholding(taxBefore, state.w2s);
+    const withholding = whCalc.total;
 
     const earnedIncome = wages;
     const MAGI = AGI;
 
-    const ctc = state.creditsSelected.ctc ? calcCTC({
-      MAGI,
-      filingStatus: state.filingStatus||"single",
-      eligibleUnder17: +state.dependents.under17||0,
-      earnedIncome,
-      taxBeforeCredits: taxBefore
-    }, cfg) : {nonrefundable:0, refundable:0};
+    const ctc = state.creditsSelected.ctc
+      ? calcCTC({
+          MAGI,
+          filingStatus: state.filingStatus||"single",
+          eligibleUnder17: +state.dependents.under17||0,
+          earnedIncome,
+          taxBeforeCredits: taxBefore,
+          kidsHaveSSN: state.interview.kidsHaveSSN
+        })
+      : {nonrefundable:0, refundable:0, note:""};
 
-    const aotcRes = state.creditsSelected.aotc ? calcAOTC(
-      (state.aotc.students||[]).slice(0,state.aotc.studentCount||0).map(s=>({
-        tuitionNet:+s.tuitionNet||0,
-        yearsClaimed:+s.yearsClaimed||0,
-        halfTime: !!s.halfTime,
-        felony: !!s.felony
-      })), MAGI, state.filingStatus||"single", cfg
-    ) : {nonrefundable:0, refundable:0, disallowedReasons:[]};
+    const aotcRes = state.creditsSelected.aotc
+      ? calcAOTC(
+          (state.aotc.students||[]).slice(0,state.aotc.studentCount||0),
+          MAGI,
+          state.filingStatus||"single"
+        )
+      : {nonrefundable:0, refundable:0, disallowedReasons:[]};
 
-    const eitcAmt = state.creditsSelected.eitc ? calcEITC(
-      earnedIncome,
-      AGI,
-      state.filingStatus||"single",
-      +state.dependents.eitcChildren||0,
-      +state.eitc.investmentIncome||0,
-      cfg
-    ) : 0;
+    const eitcAmt = state.creditsSelected.eitc
+      ? calcEITC(
+          earnedIncome,
+          AGI,
+          state.filingStatus||"single",
+          +state.dependents.eitcChildren||0,
+          +state.eitc.investmentIncome||0
+        )
+      : 0;
 
     const ord = orderCredits(
       { taxBefore },
@@ -1258,7 +1400,12 @@
     const finalAmount = totalPayments - ord.taxAfterNonref;
 
     return {
-      wages, withholding, AGI, stdDed, taxable, taxBefore,
+      wages,
+      withholding,
+      withholdingUsedEstimate: !!whCalc.usedEstimate,
+      withholdingEstimatedPart: Math.round(whCalc.estimatedPart||0),
+
+      AGI, stdDed, taxable, taxBefore,
       ctc, aotc: aotcRes, eitc: eitcAmt,
       taxAfterNonref: ord.taxAfterNonref,
       refundableTotal: ord.refundableTotal,
@@ -1274,69 +1421,6 @@
     body.classList.remove('print-scope-summary','print-scope-checklist');
     body.classList.add(which==='summary' ? 'print-scope-summary' : 'print-scope-checklist');
     setTimeout(()=>{ window.print(); setTimeout(()=>{ body.classList.remove('print-scope-summary','print-scope-checklist'); }, 50); }, 10);
-  }
-
-  /* ===========================
-     PRESETS
-     =========================== */
-  function applyPreset(id){
-    const y = state.year;
-    state = defaultState();
-    state.year = y;
-    buildBasePlan();
-
-    switch(String(id)){
-      case "1":
-        state.filingStatus="single"; state.ages.taxpayer=30;
-        state.w2s=[{employer:"",wages:40000,fedWh:3000}];
-        state.interview.hasDependents="no";
-        state.interview.paidTuition="no";
-        state.interview.investmentIncome=0;
-        state.currentStepIndex = state.stepPlan.indexOf("results");
-        break;
-
-      case "2":
-        state.filingStatus="mfj"; state.ages.taxpayer=35; state.ages.spouse=34;
-        state.w2s=[{employer:"",wages:55000,fedWh:4000}];
-        state.interview.hasDependents="yes";
-        state.interview.livedHalfCount=2;
-        state.interview.under17Count=2;
-        state.dependents.eitcChildren=2;
-        state.interview.investmentIncome=0;
-        state.interview.paidTuition="no";
-        state.currentStepIndex = state.stepPlan.indexOf("results");
-        break;
-
-      case "3":
-        state.filingStatus="hoh"; state.ages.taxpayer=29;
-        state.w2s=[{employer:"",wages:32000,fedWh:2200}];
-        state.interview.hasDependents="yes";
-        state.interview.livedHalfCount=1;
-        state.interview.under17Count=0;
-        state.dependents.eitcChildren=1;
-        state.interview.investmentIncome=0;
-        state.interview.paidTuition="yes";
-        state.interview.studentCount=1;
-        state.interview.students=[{tuitionNet:2500,yearsClaimed:0,halfTime:true,felony:false}];
-        state.currentStepIndex = state.stepPlan.indexOf("results");
-        break;
-
-      case "4":
-        state.filingStatus="single"; state.ages.taxpayer=40;
-        state.w2s=[{employer:"",wages:90000,fedWh:10000}];
-        state.interview.hasDependents="no";
-        state.dependents.eitcChildren=0;
-        state.interview.investmentIncome=0;
-        state.interview.paidTuition="yes";
-        state.interview.studentCount=1;
-        state.interview.students=[{tuitionNet:4000,yearsClaimed:0,halfTime:true,felony:false}];
-        state.currentStepIndex = state.stepPlan.indexOf("results");
-        break;
-    }
-
-    normalizeInterviewToState();
-    saveState();
-    render();
   }
 
   /* ===========================
@@ -1364,36 +1448,12 @@
   /* ===========================
      INIT
      =========================== */
-  buildBasePlan();
   (function mount(){
-    if(![2023,2024,2025].includes(+state.year)) state.year = 2025;
     wireFooterOnce();
     render();
-    TESTS();
   })();
-
-  /* ===========================
-     TESTS
-     =========================== */
-  function TESTS(){
-    try{
-      const t1 = calcTax(50000, "single", CONFIG_BY_YEAR[2025]);
-      console.assert(t1>0 && Number.isInteger(t1), "Tax should be positive integer");
-
-      const ctcTest = calcCTC({ MAGI: 60000, filingStatus:"single", eligibleUnder17:2, earnedIncome:60000, taxBeforeCredits:0 }, CONFIG_BY_YEAR[2025]);
-      console.assert(ctcTest.refundable <= 2*CONFIG_BY_YEAR[2025].ctc.refundableCapPerChild, "CTC refundable cap should apply");
-
-      const a = calcAOTC([{tuitionNet:4000,yearsClaimed:0,halfTime:true,felony:false}], 60000, "single", CONFIG_BY_YEAR[2025]);
-      console.assert(a.refundable<=1000 && a.nonrefundable>=1400, "AOTC 40% refundable cap & split");
-
-      const eOk = calcEITC(20000, 20000, "single", 1, 0, CONFIG_BY_YEAR[2025]);
-      const eNo = calcEITC(20000, 20000, "single", 1, 999999999, CONFIG_BY_YEAR[2025]);
-      console.assert(eOk >= 0 && eNo === 0, "EITC should be 0 if investment income exceeds limit");
-
-      console.log("%cTESTS PASSED","color:green;font-weight:bold");
-    }catch(err){ console.error("TESTS FAILED", err); }
-  }
   </script>
 
 </body>
 </html>
+
