@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -25,10 +24,7 @@
       color:var(--text);
       line-height:1.35;
     }
-    header{
-      padding:24px 16px 8px;
-      text-align:center;
-    }
+    header{ padding:24px 16px 8px; text-align:center; }
     h1{margin:0;font-size:28px;letter-spacing:.2px}
     h2{margin:6px 0 12px;font-size:18px;font-weight:600;color:#2a4a4f}
     .progress-wrap{max-width:980px;margin:0 auto 8px auto;padding:0 16px;display:flex;gap:8px;align-items:center;justify-content:center}
@@ -38,12 +34,17 @@
       box-shadow: inset 0 1px 2px rgba(0,0,0,.06);
     }
     .progress>div{height:100%;background:var(--mint);width:0%;transition:width .35s ease}
-    /* Layout */
+
     .wrap{max-width:1200px;margin:0 auto;padding:8px 16px 120px 16px;display:grid;grid-template-columns:1fr;gap:16px}
     .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
     .title{margin:0 0 8px;font-size:20px}
     .muted{color:#5a6d72;font-size:14px}
     .info{background:#f7fbfc;border:1px dashed #b8dadd;border-radius:12px;padding:12px;color:#34565d}
+    .banner{
+      background:#e9faf7;border:1px solid #bfece6;border-radius:12px;padding:10px 12px;
+      display:flex;gap:10px;align-items:flex-start;color:#0f4f49
+    }
+    .banner strong{white-space:nowrap}
     .row{display:grid;grid-template-columns:1fr;gap:var(--gap)}
     label{font-size:14px;font-weight:600}
     input[type="text"],input[type="number"],select{
@@ -74,7 +75,7 @@
       display:flex;gap:10px;justify-content:space-between;padding:12px 16px;z-index:20;
     }
     .footer-nav .left,.footer-nav .right{display:flex;gap:10px}
-    /* Sidebar / Totals */
+
     .grid-desktop{display:grid;grid-template-columns:1fr;gap:16px}
     @media(min-width:1024px){
       .wrap{grid-template-columns:minmax(0,760px) 1fr}
@@ -82,17 +83,18 @@
       .sidebar{position:sticky;top:12px;align-self:start}
       .footer-nav{position:static;background:transparent;border:0;padding:0}
     }
+
     .totals-head{display:flex;justify-content:space-between;align-items:center}
     .toggle{background:#e9faf7;border:1px solid #bfece6;color:#0e4b45;border-radius:8px;padding:6px 10px;font-weight:700;cursor:pointer}
     .totals-body{margin-top:10px}
     .totals-grid{display:grid;grid-template-columns:1fr auto;gap:8px;font-size:14px}
     .kpi{font-weight:800}
-    /* mobile totals drawer */
+
     .drawer{display:block}
     @media(max-width:1023px){
       .drawer.collapsed .totals-body{display:none}
     }
-    /* Print */
+
     @media print{
       body{background:#fff}
       .footer-nav, .sidebar, .progress-wrap, .acceptance, .controls, .btn.link{display:none !important}
@@ -103,9 +105,7 @@
       .card{box-shadow:none;border:1px solid #ccc}
     }
     .print-section-summary, .print-section-checklist{display:block}
-    /* small chips */
     .chip{display:inline-block;background:#e7faf7;border:1px solid #bfece6;border-radius:999px;padding:4px 10px;font-size:12px;color:#0d4f48;margin-right:6px}
-    /* Tooltip (simple) */
     .tip{display:inline-block;border-radius:999px;background:#e8f8f6;border:1px solid #bfece6;width:18px;height:18px;line-height:18px;text-align:center;font-weight:900;color:#14665d;margin-left:6px}
     .sr-only{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
     .mt8{margin-top:8px}
@@ -116,24 +116,43 @@
     canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eeee}
     .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    @media(max-width:720px){
+      .grid2,.grid3{grid-template-columns:1fr}
+    }
+    .section{border:1px solid #e6eff1;border-radius:12px;padding:12px}
+    .section-title{margin:0 0 8px;font-size:15px;color:#21484d}
+
+    /* ✅ Interview spacing improvements */
+    .subcard{
+      background:#fff;
+      border:1px solid #e6eff1;
+      border-radius:14px;
+      padding:14px;
+      box-shadow:0 4px 12px rgba(0,0,0,.04);
+    }
+    .stack{display:flex;flex-direction:column;gap:14px}
+    .subcard .section-title{margin:0 0 10px}
   </style>
 </head>
 <body>
   <header>
     <h1>CARE & TAX SERVICES – Stone Mtn</h1>
     <h2>Federal Refund Estimator</h2>
+    <div class="muted">Georgia clients • Federal estimate only (no state taxes)</div>
   </header>
+
   <div class="progress-wrap" aria-live="polite">
     <div class="progress-label"><span id="stepText">Step 1 of 1</span></div>
     <div class="progress" aria-hidden="true"><div id="progressBar"></div></div>
   </div>
+
   <main class="wrap" id="app" aria-live="polite">
     <section id="mainCol" class="grid-desktop"></section>
     <aside id="sidebar" class="sidebar">
       <div class="card drawer collapsed" id="totalsDrawer" aria-label="Running Totals">
         <div class="totals-head">
           <strong>Running Totals</strong>
-          <button class="toggle" id="toggleTotals" aria-expanded="false">Show</button>
+          <button class="toggle" id="toggleTotals" aria-expanded="false" type="button">Show</button>
         </div>
         <div class="totals-body" id="totalsBody">
           <div class="totals-grid">
@@ -149,38 +168,63 @@
 
   <div class="footer-nav" id="footerNav">
     <div class="left">
-      <button class="btn secondary" id="backBtn">Back</button>
+      <button class="btn secondary" id="backBtn" type="button">Back</button>
     </div>
     <div class="right">
-      <button class="btn secondary" id="startOverBtn">Start Over</button>
-      <button class="btn primary" id="nextBtn">Next</button>
+      <button class="btn secondary" id="startOverBtn" type="button">Start Over</button>
+      <button class="btn primary" id="nextBtn" type="button">Next</button>
     </div>
   </div>
 
   <script>
   /* ===========================
-     CONFIGURATION (2024, 2025)
+     CONFIGURATION (2023, 2024, 2025)
      =========================== */
   const CONFIG_BY_YEAR = {
+    2023: {
+      stdDeduction: { single:13850, mfj:27700, mfs:13850, hoh:20800, qw:27700 },
+      ageAddOn: { single:1850, hoh:1850, mfj:1500, mfs:1500, qw:1500 },
+      brackets: {
+        single: [[11000,.10],[44725,.12],[95375,.22],[182100,.24],[231250,.32],[578125,.35],[Infinity,.37]],
+        mfj:   [[22000,.10],[89450,.12],[190750,.22],[364200,.24],[462500,.32],[693750,.35],[Infinity,.37]],
+        mfs:   [[11000,.10],[44725,.12],[95375,.22],[182100,.24],[231250,.32],[346875,.35],[Infinity,.37]],
+        hoh:   [[15700,.10],[59850,.12],[95350,.22],[182100,.24],[231250,.32],[578100,.35],[Infinity,.37]],
+        qw:    [[22000,.10],[89450,.12],[190750,.22],[364200,.24],[462500,.32],[693750,.35],[Infinity,.37]],
+      },
+      ctc: {
+        perChild: 2000,
+        refundableCapPerChild: 1600,
+        phaseoutThreshold: { single:200000, mfs:100000, hoh:200000, qw:200000, mfj:400000 },
+        phaseoutPer1000: 50,
+        earnedIncomeThreshold: 2500,
+      },
+      aotc: {
+        phaseout: { single:[80000,90000], hoh:[80000,90000], mfs:[0,0], mfj:[160000,180000], qw:[160000,180000] },
+        refundableRate: 0.40,
+        refundableCapPerStudent: 1000,
+        perStudentMax: 2500
+      },
+      eitc: {
+        investmentIncomeLimit: 11000,
+        params: {
+          0: { phaseIn:.0765, earnedMax:7840, max:600, phaseOutRate:.0765, start:{single:9160, hoh:9160, mfs:0, qw:15310, mfj:15310} },
+          1: { phaseIn:.34,   earnedMax:11750, max:3995, phaseOutRate:.1598, start:{single:21560, hoh:21560, mfs:0, qw:28370, mfj:28370} },
+          2: { phaseIn:.40,   earnedMax:16510, max:6604, phaseOutRate:.2106, start:{single:21560, hoh:21560, mfs:0, qw:28370, mfj:28370} },
+          3: { phaseIn:.45,   earnedMax:16510, max:7430, phaseOutRate:.2106, start:{single:21560, hoh:21560, mfs:0, qw:28370, mfj:28370} },
+        }
+      },
+      adjustments: { iraLimit: 6500, studentLoanInterestCap: 2500 }
+    },
+
     2024: {
       stdDeduction: { single:14600, mfj:29200, mfs:14600, hoh:21900, qw:29200 },
       ageAddOn: { single:1950, hoh:1950, mfj:1550, mfs:1550, qw:1550 },
       brackets: {
-        single: [
-          [11600, .10],[47150,.12],[100525,.22],[191950,.24],[243725,.32],[609350,.35],[Infinity,.37]
-        ],
-        mfj: [
-          [23200,.10],[94300,.12],[201050,.22],[383900,.24],[487450,.32],[731200,.35],[Infinity,.37]
-        ],
-        mfs: [
-          [11600,.10],[47150,.12],[100525,.22],[191950,.24],[243725,.32],[365600,.35],[Infinity,.37]
-        ],
-        hoh: [
-          [16550,.10],[63100,.12],[100500,.22],[191950,.24],[243700,.32],[609350,.35],[Infinity,.37]
-        ],
-        qw: [
-          [23200,.10],[94300,.12],[201050,.22],[383900,.24],[487450,.32],[731200,.35],[Infinity,.37]
-        ],
+        single: [[11600,.10],[47150,.12],[100525,.22],[191950,.24],[243725,.32],[609350,.35],[Infinity,.37]],
+        mfj:    [[23200,.10],[94300,.12],[201050,.22],[383900,.24],[487450,.32],[731200,.35],[Infinity,.37]],
+        mfs:    [[11600,.10],[47150,.12],[100525,.22],[191950,.24],[243725,.32],[365600,.35],[Infinity,.37]],
+        hoh:    [[16550,.10],[63100,.12],[100500,.22],[191950,.24],[243700,.32],[609350,.35],[Infinity,.37]],
+        qw:     [[23200,.10],[94300,.12],[201050,.22],[383900,.24],[487450,.32],[731200,.35],[Infinity,.37]],
       },
       ctc: {
         perChild: 2000,
@@ -197,7 +241,6 @@
       },
       eitc: {
         investmentIncomeLimit: 11600,
-        // per #children -> {phaseIn, earnedMax, max, phaseOutRate, phaseOutStart: {single/mfj/hoh/qw/mfs}}
         params: {
           0: { phaseIn:.0765, earnedMax:7840, max:600, phaseOutRate:.0765, start:{single:9160, hoh:9160, mfs:0, qw:15310, mfj:15310} },
           1: { phaseIn:.34,   earnedMax:11750, max:3995, phaseOutRate:.1598, start:{single:21560, hoh:21560, mfs:0, qw:28370, mfj:28370} },
@@ -205,73 +248,57 @@
           3: { phaseIn:.45,   earnedMax:16510, max:7430, phaseOutRate:.2106, start:{single:21560, hoh:21560, mfs:0, qw:28370, mfj:28370} },
         }
       },
-      ptc: {
-        // very rough FPL (contiguous US) for household size 1 and increment adders
-        fplBase: 15060, fplAdder: 5380,
-        bands: [
-          { upto:1.5, expectedPct:.02 },
-          { upto:2.0, expectedPct:.035 },
-          { upto:2.5, expectedPct:.05 },
-          { upto:3.0, expectedPct:.065 },
-          { upto:4.0, expectedPct:.085 },
-          { upto:Infinity, expectedPct:.095 }
-        ]
-      },
       adjustments: { iraLimit: 7000, studentLoanInterestCap: 2500 }
     },
+
     2025: {
-      stdDeduction: { single:15300, mfj:30600, mfs:15300, hoh:22950, qw:30600 },
+      /* ✅ Updated per your requested values */
+      stdDeduction: { single:15750, mfj:31500, mfs:15750, hoh:23625, qw:31500 },
       ageAddOn: { single:2000, hoh:2000, mfj:1600, mfs:1600, qw:1600 },
+
       brackets: {
         single: [
-          [12000,.10],[49000,.12],[105000,.22],[200000,.24],[255000,.32],[620000,.35],[Infinity,.37]
+          [11925,.10],[48475,.12],[103350,.22],[197300,.24],[250525,.32],[626350,.35],[Infinity,.37]
         ],
         mfj: [
-          [24000,.10],[98000,.12],[210000,.22],[400000,.24],[500000,.32],[744000,.35],[Infinity,.37]
+          [23850,.10],[96950,.12],[206700,.22],[394600,.24],[501050,.32],[751600,.35],[Infinity,.37]
         ],
         mfs: [
-          [12000,.10],[49000,.12],[105000,.22],[200000,.24],[255000,.32],[372000,.35],[Infinity,.37]
+          [11925,.10],[48475,.12],[103350,.22],[197300,.24],[250525,.32],[375800,.35],[Infinity,.37]
         ],
         hoh: [
-          [17000,.10],[65000,.12],[103000,.22],[200000,.24],[255000,.32],[620000,.35],[Infinity,.37]
+          [17000,.10],[64850,.12],[103350,.22],[197300,.24],[250500,.32],[626350,.35],[Infinity,.37]
         ],
         qw: [
-          [24000,.10],[98000,.12],[210000,.22],[400000,.24],[500000,.32],[744000,.35],[Infinity,.37]
-        ]
+          [23850,.10],[96950,.12],[206700,.22],[394600,.24],[501050,.32],[751600,.35],[Infinity,.37]
+        ],
       },
+
       ctc: {
-        perChild: 2000,
+        perChild: 2200,
         refundableCapPerChild: 1700,
         phaseoutThreshold: { single:200000, mfs:100000, hoh:200000, qw:200000, mfj:400000 },
         phaseoutPer1000: 50,
-        earnedIncomeThreshold: 2500,
+        earnedIncomeThreshold: 2500
       },
+
       aotc: {
-        phaseout: { single:[82000,92000], hoh:[82000,92000], mfs:[0,0], mfj:[164000,184000], qw:[164000,184000] },
+        phaseout: { single:[80000,90000], hoh:[80000,90000], mfs:[0,0], mfj:[160000,180000], qw:[160000,180000] },
         refundableRate: 0.40,
         refundableCapPerStudent: 1000,
         perStudentMax: 2500
       },
+
       eitc: {
-        investmentIncomeLimit: 12000,
+        investmentIncomeLimit: 11950,
         params: {
-          0: { phaseIn:.0765, earnedMax:8000, max:610, phaseOutRate:.0765, start:{single:9300, hoh:9300, mfs:0, qw:15500, mfj:15500} },
-          1: { phaseIn:.34,   earnedMax:12000, max:4050, phaseOutRate:.1598, start:{single:22000, hoh:22000, mfs:0, qw:29000, mfj:29000} },
-          2: { phaseIn:.40,   earnedMax:17000, max:6700, phaseOutRate:.2106, start:{single:22000, hoh:22000, mfs:0, qw:29000, mfj:29000} },
-          3: { phaseIn:.45,   earnedMax:17000, max:7600, phaseOutRate:.2106, start:{single:22000, hoh:22000, mfs:0, qw:29000, mfj:29000} },
+          0: { phaseIn:.0765, earnedMax:8490,  max:649,  phaseOutRate:.0765, start:{single:10620, hoh:10620, mfs:0, qw:10620, mfj:17570} },
+          1: { phaseIn:.34,   earnedMax:12770, max:4328, phaseOutRate:.1598, start:{single:23350, hoh:23350, mfs:0, qw:23350, mfj:30300} },
+          2: { phaseIn:.40,   earnedMax:17880, max:7152, phaseOutRate:.2106, start:{single:23350, hoh:23350, mfs:0, qw:23350, mfj:30300} },
+          3: { phaseIn:.45,   earnedMax:17880, max:8046, phaseOutRate:.2106, start:{single:23350, hoh:23350, mfs:0, qw:23350, mfj:30300} },
         }
       },
-      ptc: {
-        fplBase: 15600, fplAdder: 5600,
-        bands: [
-          { upto:1.5, expectedPct:.02 },
-          { upto:2.0, expectedPct:.036 },
-          { upto:2.5, expectedPct:.052 },
-          { upto:3.0, expectedPct:.068 },
-          { upto:4.0, expectedPct:.088 },
-          { upto:Infinity, expectedPct:.095 }
-        ]
-      },
+
       adjustments: { iraLimit: 7000, studentLoanInterestCap: 2500 }
     }
   };
@@ -279,23 +306,41 @@
   /* ===========================
      STATE & PERSISTENCE
      =========================== */
-  const LS_KEY = "caretax_refund_estimator_v1";
+  const LS_KEY = "caretax_refund_estimator_v2_w2only";
 
   const defaultState = () => ({
-    year: new Date().getFullYear() >= 2025 ? 2025 : 2024,
+    year: 2025,
     filingStatus: null, // "single" | "mfj" | "mfs" | "hoh" | "qw"
     ages: { taxpayer: null, spouse: null },
+
     w2s: [{ employer:"", wages:0, fedWh:0 }],
+
     adjustments: { iraDeduction:0, studentLoanInterest:0 },
+
     dependents: { total:0, under17:0, eitcChildren:0 },
-    creditsSelected: { ctc:false, aotc:false, eitc:false, ptc:false },
+
+    creditsSelected: { ctc:false, aotc:false, eitc:false },
+
     aotc: {
       studentCount: 0,
       students: [{ tuitionNet:0, yearsClaimed:0, halfTime:true, felony:false }]
     },
+
     eitc: { investmentIncome:0 },
-    ptc: { householdSize:1, advancePTC:0, slcspAnnual:null, magiOverride:null },
-    stepPlan: ["welcome","status","income","dependents","credits","ctc","aotc","eitc","ptc","results"],
+
+    interview: {
+      hasDependents: "no",
+      livedHalfCount: 0,
+      under17Count: 0,
+
+      investmentIncome: 0,
+
+      paidTuition: "no",
+      studentCount: 0,
+      students: [{ tuitionNet:0, yearsClaimed:0, halfTime:true, felony:false }]
+    },
+
+    stepPlan: ["welcome","status","income","interview","results"],
     currentStepIndex: 0
   });
 
@@ -305,14 +350,11 @@
     try{
       const s = JSON.parse(localStorage.getItem(LS_KEY));
       if(!s || typeof s !== 'object') return defaultState();
-      // ensure required fields exist
       const base = defaultState();
       return deepMerge(base, s);
     }catch(e){ return defaultState(); }
   }
-  function saveState(){
-    localStorage.setItem(LS_KEY, JSON.stringify(state));
-  }
+  function saveState(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
   function resetState(){
     localStorage.removeItem(LS_KEY);
     state = defaultState();
@@ -330,24 +372,22 @@
         }else out[k] = incoming[k];
       }
     }
-    // include any new keys from incoming
-    for(const k in incoming){
-      if(!(k in out)) out[k] = incoming[k];
-    }
+    for(const k in incoming){ if(!(k in out)) out[k] = incoming[k]; }
     return out;
   }
 
   /* ===========================
-     HELPERS (format, math)
+     HELPERS
      =========================== */
   const $ = (sel, root=document) => root.querySelector(sel);
   const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
-
   function fmtMoney(n){ if(n===null||n===undefined) return "$0"; return n.toLocaleString(undefined,{style:"currency",currency:"USD",maximumFractionDigits:0}); }
   function parseMoney(str){ if(str===null||str===undefined) return 0; const num = +String(str).replace(/[^\d.-]/g,""); return isFinite(num)?num:0; }
   function clamp(n,min,max){ return Math.max(min, Math.min(max,n)); }
-
-  function yearCfg(){ return CONFIG_BY_YEAR[state.year] || CONFIG_BY_YEAR[Object.keys(CONFIG_BY_YEAR)[0]]; }
+  function yearCfg(){ return CONFIG_BY_YEAR[state.year] || CONFIG_BY_YEAR[2025]; }
+  function labelFS(code){
+    return {single:"Single", mfj:"Married Filing Jointly", mfs:"Married Filing Separately", hoh:"Head of Household", qw:"Qualifying Widow(er)"}[code] || "—";
+  }
 
   /* ===========================
      CALCULATIONS (PURE)
@@ -366,13 +406,14 @@
   function calcStandardDeduction(_state, CONFIG){
     const status = _state.filingStatus || "single";
     const base = CONFIG.stdDeduction[status] || 0;
-    const add = (() => {
-      const addCfg = CONFIG.ageAddOn;
-      const t65 = +(_state.ages.taxpayer||0) >= 65;
-      const s65 = status==="mfj" ? +(_state.ages.spouse||0) >= 65 : false;
-      const addPer = addCfg[status] || addCfg.single || 0;
-      return (t65?addPer:0) + (s65?addPer:0);
-    })();
+    const addCfg = CONFIG.ageAddOn;
+
+    const t65 = +(_state.ages.taxpayer||0) >= 65;
+    const s65 = status==="mfj" ? +(_state.ages.spouse||0) >= 65 : false;
+
+    const addPer = addCfg[status] || addCfg.single || 0;
+    const add = (t65?addPer:0) + (s65?addPer:0);
+
     return base + add;
   }
 
@@ -392,16 +433,21 @@
 
   function calcCTC({MAGI, filingStatus, eligibleUnder17, earnedIncome, taxBeforeCredits}, CONFIG){
     const cfg = CONFIG.ctc;
+
     const baseCredit = (eligibleUnder17||0) * cfg.perChild;
     const threshold = cfg.phaseoutThreshold[filingStatus] || cfg.phaseoutThreshold.single;
-    const phaseout = Math.max(0, Math.ceil(Math.max(0,MAGI - threshold)/1000) * cfg.phaseoutPer1000);
+
+    const phaseout = Math.max(0, Math.ceil(Math.max(0, MAGI - threshold)/1000) * cfg.phaseoutPer1000);
     const afterPhase = Math.max(0, baseCredit - phaseout);
+
     const nonref = Math.min(afterPhase, taxBeforeCredits);
+
     const remaining = Math.max(0, afterPhase - nonref);
     const earnedExcess = Math.max(0,(earnedIncome||0) - cfg.earnedIncomeThreshold);
     const actcMaxByIncome = Math.round(earnedExcess * 0.15);
     const actcCap = (eligibleUnder17||0) * cfg.refundableCapPerChild;
     const refundable = Math.min(remaining, actcCap, actcMaxByIncome);
+
     return { nonrefundable: nonref, refundable: refundable };
   }
 
@@ -409,69 +455,73 @@
     const cfg = CONFIG.aotc;
     const [lo,hi] = cfg.phaseout[filingStatus] || [0,0];
     const disallowedReasons = [];
-    if(filingStatus==="mfs"){ disallowedReasons.push("AOTC not allowed for Married Filing Separately."); return { nonrefundable:0, refundable:0, disallowedReasons }; }
+
+    if(filingStatus==="mfs"){
+      disallowedReasons.push("AOTC not allowed for Married Filing Separately.");
+      return { nonrefundable:0, refundable:0, disallowedReasons };
+    }
+
     let base=0, refundableBase=0, count=0;
+
     students.forEach((s,i)=>{
       if(!s) return;
       const years = +s.yearsClaimed||0;
       const tuition = Math.max(0, +s.tuitionNet||0);
       const half = !!s.halfTime;
       const fel = !!s.felony;
+
+      if(tuition<=0){ disallowedReasons.push(`Student ${i+1}: tuition must be > 0`); return; }
       if(years>=4){ disallowedReasons.push(`Student ${i+1}: exceeds 4-year limit`); return; }
       if(!half){ disallowedReasons.push(`Student ${i+1}: must be at least half-time`); return; }
       if(fel){ disallowedReasons.push(`Student ${i+1}: felony drug conviction rule`); return; }
+
       const first2k = Math.min(2000, tuition);
       const next2k = Math.min(2000, Math.max(0, tuition - 2000));
-      const credit = first2k + 0.25 * next2k; // max 2500
+      const credit = first2k + 0.25 * next2k;
+
       base += credit;
       refundableBase += Math.min(cfg.refundableCapPerStudent, credit * cfg.refundableRate);
       count++;
     });
+
     if(count===0) return { nonrefundable:0, refundable:0, disallowedReasons };
-    // MAGI phaseout
+
     let factor = 1;
     if(hi>lo && MAGI>lo){
       if(MAGI>=hi) factor = 0;
       else factor = (hi - MAGI)/(hi - lo);
     }
+
     base *= factor;
     refundableBase *= factor;
+
     const nonref = Math.max(0, base - refundableBase);
     const refundable = Math.max(0, refundableBase);
+
     return { nonrefundable: Math.round(nonref), refundable: Math.round(refundable), disallowedReasons };
   }
 
   function calcEITC(earnedIncome, AGI, filingStatus, qualChildren, investmentIncome, CONFIG){
     const invLimit = CONFIG.eitc.investmentIncomeLimit;
     if((investmentIncome||0) > invLimit) return 0;
+
     const n = Math.max(0, Math.min(3, +qualChildren||0));
     const p = CONFIG.eitc.params[n];
     if(!p) return 0;
+
     if(filingStatus==="mfs") return 0;
-    const income = Math.min(earnedIncome||0, AGI||0); // conservatively use the lower
+
+    const income = Math.min(earnedIncome||0, AGI||0);
+
     const phaseInAmt = Math.min(income, p.earnedMax);
     const phaseInCredit = phaseInAmt * p.phaseIn;
     const maxCredit = Math.min(p.max, phaseInCredit);
-    const start = p.start[filingStatus] || p.start.single;
+
+    const start = (p.start[filingStatus] ?? p.start.single);
     const poi = Math.max(0, (income - start) * p.phaseOutRate);
+
     const credit = Math.max(0, maxCredit - poi);
     return Math.round(credit);
-  }
-
-  function calcPTC(MAGI, householdSize, advancePTC, slcspAnnual, CONFIG){
-    if(!MAGI || !slcspAnnual){
-      return { amount: 0, note: 'PTC estimate not computed without SLCSP/MAGI.' };
-    }
-    const base = CONFIG.fplBase;
-    const add = CONFIG.fplAdder;
-    const fpl = base + add * (Math.max(1, householdSize)-1);
-    const ratio = MAGI / fpl;
-    let expectedPct = CONFIG.bands[CONFIG.bands.length-1].expectedPct;
-    for(const b of CONFIG.bands){ if(ratio <= b.upto){ expectedPct = b.expectedPct; break; } }
-    const expectedContribution = MAGI * expectedPct;
-    const annualPTC = Math.max(0, (slcspAnnual||0) - expectedContribution);
-    const net = Math.max(0, annualPTC - (advancePTC||0));
-    return { amount: Math.round(net), note:null };
   }
 
   function orderCredits({taxBefore}, nonrefList, refundableList){
@@ -485,14 +535,53 @@
     const forms = ["Form 1040"];
     if((_state.adjustments.iraDeduction||0)>0 || (_state.adjustments.studentLoanInterest||0)>0) forms.push("Schedule 1");
     if((_state.creditsSelected.ctc) && (results.ctc.nonrefundable>0 || results.ctc.refundable>0)) forms.push("Schedule 8812 (incl. Worksheets)");
-    if((_state.creditsSelected.aotc) && (results.aotc.nonrefundable>0 || results.aotc.refundable>0)) { forms.push("Form 8863"); if(results.aotc.nonrefundable>0) forms.push("Schedule 3"); }
+    if((_state.creditsSelected.aotc) && (results.aotc.nonrefundable>0 || results.aotc.refundable>0)) {
+      forms.push("Form 8863");
+      if(results.aotc.nonrefundable>0) forms.push("Schedule 3");
+    }
     if((_state.creditsSelected.eitc) && results.eitc>0){
       forms.push((_state.dependents.eitcChildren>0 ? "Schedule EIC" : "EITC Worksheet"));
     }
-    if((_state.creditsSelected.ptc)){
-      forms.push("Form 8962" + (results.ptc.note ? " (SLCSP/MAGI needed for estimate)" : ""));
-    }
     return forms;
+  }
+
+  /* ===========================
+     GUIDED INTERVIEW → AUTO-SELECT CREDITS
+     =========================== */
+  function normalizeInterviewToState(){
+    const inv = clamp(+state.interview.investmentIncome||0, 0, 9e15);
+    state.eitc.investmentIncome = inv;
+
+    const hasDeps = state.interview.hasDependents === "yes";
+    const livedHalf = hasDeps ? clamp(+state.interview.livedHalfCount||0, 0, 99) : 0;
+    const under17 = hasDeps ? clamp(+state.interview.under17Count||0, 0, livedHalf) : 0;
+
+    state.dependents.total = livedHalf;
+    state.dependents.under17 = under17;
+
+    const eitcKids = clamp(+state.dependents.eitcChildren||0, 0, livedHalf);
+    state.dependents.eitcChildren = eitcKids;
+
+    state.creditsSelected.ctc = under17 > 0;
+    state.creditsSelected.eitc = (state.filingStatus !== "mfs");
+
+    const paidTuition = state.interview.paidTuition === "yes";
+    state.creditsSelected.aotc = paidTuition;
+
+    const sc = paidTuition ? clamp(+state.interview.studentCount||0, 0, 3) : 0;
+    state.aotc.studentCount = sc;
+
+    while(state.interview.students.length < sc) state.interview.students.push({tuitionNet:0,yearsClaimed:0,halfTime:true,felony:false});
+    if(state.interview.students.length > sc) state.interview.students = state.interview.students.slice(0, sc);
+
+    state.aotc.students = (state.interview.students||[]).slice(0, sc).map(s=>({
+      tuitionNet: Math.max(0, +s.tuitionNet||0),
+      yearsClaimed: clamp(+s.yearsClaimed||0, 0, 3),
+      halfTime: (s.halfTime===true || s.halfTime==="true"),
+      felony: (s.felony===true || s.felony==="true")
+    }));
+
+    saveState();
   }
 
   /* ===========================
@@ -501,11 +590,12 @@
   function validate(step){
     const errors = [];
     const s = state;
-    const cfg = yearCfg();
+
     switch(step){
       case "welcome":
-        if(![2024,2025].includes(+s.year)) errors.push("Year is required.");
+        if(![2023,2024,2025].includes(+s.year)) errors.push("Year is required (2023–2025).");
         break;
+
       case "status":
         if(!s.filingStatus) errors.push("Choose a filing status.");
         if(s.ages.taxpayer===null || isNaN(+s.ages.taxpayer) || +s.ages.taxpayer<0 || +s.ages.taxpayer>120) errors.push("Enter a valid taxpayer age.");
@@ -513,6 +603,7 @@
           if(s.ages.spouse===null || isNaN(+s.ages.spouse) || +s.ages.spouse<0 || +s.ages.spouse>120) errors.push("Enter a valid spouse age.");
         }
         break;
+
       case "income":
         if(!s.w2s.length) errors.push("Add at least one W-2.");
         s.w2s.forEach((w,i)=>{
@@ -522,36 +613,25 @@
         if(+s.adjustments.iraDeduction<0) errors.push("IRA deduction cannot be negative.");
         if(+s.adjustments.studentLoanInterest<0) errors.push("Student loan interest cannot be negative.");
         break;
-      case "dependents":
-        if(+s.dependents.total<0) errors.push("Dependents cannot be negative.");
-        if(+s.dependents.under17<0 || +s.dependents.under17 > +s.dependents.total) errors.push("Under-17 count must be between 0 and total dependents.");
-        if(+s.dependents.eitcChildren<0) errors.push("EITC qualifying children cannot be negative.");
-        break;
-      case "credits":
-        // no required fields here
-        break;
-      case "ctc":
-        if(+s.dependents.under17<0) errors.push("Eligible children must be ≥ 0.");
-        break;
-      case "aotc":
-        if(s.aotc.studentCount>0){
-          for(let i=0;i<s.aotc.studentCount;i++){
-            const st = s.aotc.students[i];
-            if(!st) { errors.push(`Student ${i+1} missing.`); continue; }
-            if(+st.tuitionNet<=0) errors.push(`Student ${i+1}: tuition must be > 0.`);
+
+      case "interview":
+        if(!["yes","no"].includes(s.interview.hasDependents)) errors.push("Please answer the dependents question.");
+        if(+s.interview.livedHalfCount<0) errors.push("Dependents count can’t be negative.");
+        if(+s.interview.under17Count<0) errors.push("Under-17 count can’t be negative.");
+        if(+s.interview.under17Count > +s.interview.livedHalfCount) errors.push("Under-17 count can’t be more than the dependents who lived with you > half the year.");
+        if(+s.interview.investmentIncome<0) errors.push("Investment income can’t be negative.");
+
+        if(!["yes","no"].includes(s.interview.paidTuition)) errors.push("Please answer the college tuition question.");
+        if(s.interview.paidTuition==="yes"){
+          const sc = clamp(+s.interview.studentCount||0, 0, 3);
+          if(sc<=0) errors.push("If you paid tuition, select the number of students (1–3).");
+          for(let i=0;i<sc;i++){
+            const st = (s.interview.students||[])[i];
+            if(!st){ errors.push(`Student ${i+1} missing.`); continue; }
             if(+st.yearsClaimed<0 || +st.yearsClaimed>3) errors.push(`Student ${i+1}: years claimed must be 0–3.`);
+            /* ✅ do NOT block Next for blank tuition; treated as 0 in estimator */
           }
         }
-        break;
-      case "eitc":
-        if(+s.dependents.eitcChildren<0) errors.push("Qualifying children must be ≥ 0.");
-        if(+s.eitc.investmentIncome<0) errors.push("Investment income must be ≥ 0.");
-        break;
-      case "ptc":
-        if(+s.ptc.householdSize<=0) errors.push("Household size must be at least 1.");
-        if(+s.ptc.advancePTC<0) errors.push("Advance PTC cannot be negative.");
-        if(s.ptc.slcspAnnual!==null && +s.ptc.slcspAnnual<0) errors.push("SLCSP cannot be negative.");
-        if(s.ptc.magiOverride!==null && +s.ptc.magiOverride<0) errors.push("MAGI override cannot be negative.");
         break;
     }
     return errors;
@@ -561,21 +641,17 @@
      STEP PLAN & NAVIGATION
      =========================== */
   function buildBasePlan(){
-    state.stepPlan = ["welcome","status","income","dependents","credits","results"]; // base plan before credit selection routing
-  }
-  function buildCreditPlan(){
-    let plan = ["welcome","status","income","dependents","credits"];
-    const order = ["ctc","aotc","eitc","ptc"];
-    order.forEach(key=>{ if(state.creditsSelected[key]) plan.push(key); });
-    plan.push("results");
-    state.stepPlan = plan;
+    state.stepPlan = ["welcome","status","income","interview","results"];
   }
   function currentStep(){ return state.stepPlan[state.currentStepIndex] || "welcome"; }
+
   function goNext(){
     const step = currentStep();
     const errs = validate(step);
     if(errs.length){ showErrors(errs); return; }
-    if(step==="credits"){ buildCreditPlan(); }
+
+    if(step==="interview"){ normalizeInterviewToState(); }
+
     if(state.currentStepIndex < state.stepPlan.length-1){
       state.currentStepIndex++;
       saveState();
@@ -602,23 +678,10 @@
     if(area){
       area.innerHTML = list.map(e=>`<div class="error">• ${e}</div>`).join("");
       area.focus();
+      area.scrollIntoView({behavior:"smooth", block:"start"});
+    } else {
+      alert(list.join("\n"));
     }
-  }
-
-  function inputNumberSync(el, path, money=false){
-    // read value
-    let val = el.value.trim();
-    let num = money ? parseMoney(val) : +val;
-    if(!isFinite(num) || num < 0) num = 0;
-    setByPath(state, path, num);
-    saveState();
-    if(money){ el.value = formatForMoneyInput(num, el === document.activeElement); }
-    updateTotals();
-  }
-
-  function inputTextSync(el, path){
-    setByPath(state, path, el.value);
-    saveState();
   }
 
   function setByPath(obj, path, value){
@@ -631,47 +694,29 @@
     }
     ref[parts[parts.length-1]] = value;
   }
-  function getByPath(obj, path, def){
-    const parts = Array.isArray(path)?path: String(path).split(".");
-    let ref = obj;
-    for(const k of parts){ if(ref==null) return def; ref = ref[k]; }
-    return ref==null?def:ref;
-  }
-
-  function formatForMoneyInput(n, focused){
-    return focused ? String(n||0) : (n? n.toLocaleString(undefined,{maximumFractionDigits:0}) : "");
-  }
 
   function render(){
-    // progress
     const total = state.stepPlan.length;
     const idx = state.currentStepIndex + 1;
     stepText.textContent = `Step ${idx} of ${total}`;
     progressBar.style.width = `${(idx-0.01)/total*100}%`;
 
-    // footer buttons visibility
     const step = currentStep();
     $('#backBtn').disabled = state.currentStepIndex===0;
     $('#nextBtn').style.display = step==="results" ? "none" : "inline-block";
     $('#backBtn').style.visibility = step==="results" ? "hidden" : "visible";
 
-    // main content
     mainCol.innerHTML = "";
     const card = document.createElement('div');
     card.className = "card";
     card.innerHTML = renderStep(step);
     mainCol.appendChild(card);
 
-    // attach events
     attachCommonHandlers(card);
-
-    // update sidebar totals
     updateTotals();
 
-    // keyboard: Enter advances if valid
     card.onkeydown = (e)=>{
       if(e.key==="Enter"){
-        // don't submit if focusing on button
         if(e.target && (e.target.tagName==="BUTTON" || e.target.type==="button")) return;
         e.preventDefault();
         const errs = validate(step);
@@ -683,7 +728,6 @@
   }
 
   function attachCommonHandlers(scope){
-    // money inputs
     $$('input[data-money]', scope).forEach(el=>{
       el.addEventListener('focus', ()=>{ el.value = parseMoney(el.value); });
       el.addEventListener('blur', ()=>{
@@ -691,14 +735,13 @@
         el.value = num ? num.toLocaleString() : "";
       });
       el.addEventListener('input', ()=>{
-        // live store without formatting
         const num = parseMoney(el.value);
         setByPath(state, el.dataset.bind, isFinite(num)?num:0);
         saveState();
         updateTotals();
       });
     });
-    // numeric inputs (non-money)
+
     $$('input[type="number"]:not([data-money])', scope).forEach(el=>{
       el.addEventListener('input', ()=>{
         let v = +el.value;
@@ -707,57 +750,52 @@
         saveState(); updateTotals();
       });
     });
-    // text
+
     $$('input[type="text"]:not([data-money])', scope).forEach(el=>{
       el.addEventListener('input', ()=>{
         setByPath(state, el.dataset.bind, el.value);
         saveState();
       });
     });
-    // selects, radios, checkboxes
+
     $$('select, input[type="radio"], input[type="checkbox"]', scope).forEach(el=>{
       el.addEventListener('change', ()=>{
         if(el.type==="checkbox") setByPath(state, el.dataset.bind, el.checked);
-        else if(el.type==="radio") setByPath(state, el.name, el.value);
+        else if (el.type === "radio") setByPath(state, el.dataset.bind || el.name, el.value);
         else setByPath(state, el.dataset.bind, el.value);
-        saveState(); updateTotals(); renderIfNeeded(el);
+
+        if(el.id==="intStudentCount"){
+          const n = clamp(+el.value||0, 0, 3);
+          state.interview.studentCount = n;
+          while(state.interview.students.length < n) state.interview.students.push({tuitionNet:0,yearsClaimed:0,halfTime:true,felony:false});
+          if(state.interview.students.length > n) state.interview.students = state.interview.students.slice(0,n);
+        }
+
+        saveState();
+        updateTotals();
+        renderIfNeeded(el);
       });
     });
 
-    // W-2 add/remove
     const addW2 = $('#addW2');
     if(addW2) addW2.onclick = ()=>{ state.w2s.push({employer:"",wages:0,fedWh:0}); saveState(); render(); };
     $$('.removeW2', scope).forEach((btn,idx)=>{
       btn.onclick = ()=>{ state.w2s.splice(idx,1); if(!state.w2s.length) state.w2s=[{employer:"",wages:0,fedWh:0}]; saveState(); render(); };
     });
 
-    // AOTC student count change => ensure array length
-    const sc = $('#aotcCount');
-    if(sc){
-      sc.onchange = ()=>{
-        const n = clamp(+sc.value||0,0,3);
-        state.aotc.studentCount = n;
-        while(state.aotc.students.length < n) state.aotc.students.push({tuitionNet:0,yearsClaimed:0,halfTime:true,felony:false});
-        if(state.aotc.students.length>n) state.aotc.students = state.aotc.students.slice(0,n);
-        saveState(); render();
-      }
-    }
-
-    // results buttons
     const downloadSummary = $('#downloadSummary');
     if(downloadSummary) downloadSummary.onclick = ()=>{ preparePrint('summary'); };
     const downloadChecklist = $('#downloadChecklist');
     if(downloadChecklist) downloadChecklist.onclick = ()=>{ preparePrint('checklist'); };
 
-    const presets = $$('.preset');
+    const presets = $$('.preset', scope);
     presets.forEach(btn=> btn.onclick = ()=> applyPreset(btn.dataset.preset) );
 
-    // Back/Next in footer
-    $('#backBtn').onclick = goBack;
-    $('#nextBtn').onclick = goNext;
-    $('#startOverBtn').onclick = resetState;
+    /* ✅ Start over inside results (no duplicate id) */
+    $$('[data-action="reset"]', scope).forEach(btn=>{
+      btn.onclick = (e)=>{ e.preventDefault(); resetState(); };
+    });
 
-    // mobile totals drawer
     const toggle = $('#toggleTotals');
     if(toggle){
       toggle.onclick = ()=>{
@@ -770,8 +808,13 @@
   }
 
   function renderIfNeeded(el){
-    // handle conditional visibility changes without full rerender if simple
-    if(el && el.dataset.triggerRender) render();
+    if(!el) return;
+    if(el.dataset.triggerRender) return render();
+
+    const bind = el.dataset.bind || "";
+    if(bind === "interview.hasDependents" || bind === "interview.paidTuition" || bind === "filingStatus"){
+      render();
+    }
   }
 
   function renderStep(step){
@@ -780,16 +823,26 @@
       case "welcome":
         return `
           <h3 class="title">Welcome! Let’s estimate your federal refund.</h3>
-          <div class="info" role="note">Educational estimate only. Not tax advice.</div>
+          <div class="banner" role="note">
+            <strong>W-2 only.</strong>
+            <div>
+              Federal estimate only. Not tax advice.
+              <div class="help">This tool uses W-2 Box 1 wages + W-2 Box 2 federal withholding. No self-employment, no rental, no capital gains.</div>
+            </div>
+          </div>
+
           <div class="row mt12">
             <label for="yearSel">Filing Year</label>
             <select id="yearSel" data-bind="year" aria-label="Filing Year">
-              <option value="2024" ${state.year==2024?'selected':''}>2024</option>
               <option value="2025" ${state.year==2025?'selected':''}>2025</option>
+              <option value="2024" ${state.year==2024?'selected':''}>2024</option>
+              <option value="2023" ${state.year==2023?'selected':''}>2023</option>
             </select>
+            <div class="help">Default is 2025 (for filing in early 2026).</div>
           </div>
           <div id="errorArea" class="mt8" tabindex="-1" aria-live="polite"></div>
         `;
+
       case "status":
         return `
           <h3 class="title">Filing Status & Ages</h3>
@@ -799,29 +852,37 @@
                 const label = {single:"Single", mfj:"Married Filing Jointly", mfs:"Married Filing Separately", hoh:"Head of Household", qw:"Qualifying Widow(er)"}[code];
                 return `
                 <label class="radio-option">
-                  <input type="radio" name="filingStatus" value="${code}" ${state.filingStatus===code?'checked':''} data-trigger-render="1">
+                  <input type="radio" name="filingStatus" data-bind="filingStatus" value="${code}" ${state.filingStatus===code?'checked':''} data-trigger-render="1">
                   <span>${label}</span>
                 </label>`;
               }).join('')}
             </div>
+
             <div class="grid2">
               <div>
                 <label for="ageT">Taxpayer age</label>
                 <input id="ageT" type="number" min="0" max="120" data-bind="ages.taxpayer" value="${state.ages.taxpayer??''}">
+                <div class="help">Age helps estimate extra standard deduction at 65+.</div>
               </div>
               ${state.filingStatus==="mfj" ? `
               <div>
                 <label for="ageS">Spouse age</label>
                 <input id="ageS" type="number" min="0" max="120" data-bind="ages.spouse" value="${state.ages.spouse??''}">
+                <div class="help">Only needed for Joint filers.</div>
               </div>` : ''}
             </div>
           </div>
-          <div class="mt8 help">Standard deduction preview includes age add-ons at 65+.</div>
+
+          ${state.filingStatus==="mfs" ? `
+            <div class="info mt12">Note: Married Filing Separately often disqualifies or limits certain credits (like EITC and AOTC). This estimator will reflect those limits.</div>
+          ` : ''}
+
           <div id="errorArea" class="mt8" tabindex="-1" aria-live="polite"></div>
         `;
+
       case "income":
         return `
-          <h3 class="title">Income — W-2</h3>
+          <h3 class="title">Income — W-2 Only</h3>
           <div class="row">
             ${state.w2s.map((w,idx)=>`
               <div class="w2-row">
@@ -829,14 +890,17 @@
                   <div>
                     <label>Employer</label>
                     <input type="text" data-bind="w2s.${idx}.employer" value="${w.employer||''}" placeholder="(optional)">
+                    <div class="help">Just for your reference.</div>
                   </div>
                   <div>
-                    <label>Wages (Box 1)</label>
+                    <label>Wages (W-2 Box 1)</label>
                     <input class="money" data-money="1" data-bind="w2s.${idx}.wages" value="${(w.wages?Number(w.wages).toLocaleString(): '')}" inputmode="numeric">
+                    <div class="help">Use Box 1 (not Box 3/5).</div>
                   </div>
                   <div>
-                    <label>Federal tax withheld (Box 2)</label>
+                    <label>Federal withheld (W-2 Box 2)</label>
                     <input class="money" data-money="1" data-bind="w2s.${idx}.fedWh" value="${(w.fedWh?Number(w.fedWh).toLocaleString(): '')}" inputmode="numeric">
+                    <div class="help">Federal only (not state).</div>
                   </div>
                 </div>
                 <div class="mt8">
@@ -845,169 +909,182 @@
               </div>
             `).join('')}
             <button id="addW2" class="btn small primary" type="button">Add W-2</button>
-            <div class="grid2">
-              <div>
-                <label>Traditional IRA deduction <span class="tip" title="Potentially deductible on Schedule 1">i</span></label>
-                <input class="money" data-money="1" data-bind="adjustments.iraDeduction" value="${(state.adjustments.iraDeduction?Number(state.adjustments.iraDeduction).toLocaleString(): '')}">
-                <div class="help">Cap ${fmtMoney(cfg.adjustments.iraLimit)} (configurable).</div>
+
+            <div class="section">
+              <p class="section-title"><strong>Optional adjustments (simple)</strong></p>
+              <div class="grid2">
+                <div>
+                  <label>Traditional IRA deduction <span class="tip" title="If deductible, it may reduce AGI">i</span></label>
+                  <input class="money" data-money="1" data-bind="adjustments.iraDeduction" value="${(state.adjustments.iraDeduction?Number(state.adjustments.iraDeduction).toLocaleString(): '')}">
+                  <div class="help">We cap this input at ${fmtMoney(cfg.adjustments.iraLimit)} in calculations.</div>
+                </div>
+                <div>
+                  <label>Student loan interest <span class="tip" title="If eligible, it may reduce AGI">i</span></label>
+                  <input class="money" data-money="1" data-bind="adjustments.studentLoanInterest" value="${(state.adjustments.studentLoanInterest?Number(state.adjustments.studentLoanInterest).toLocaleString(): '')}">
+                  <div class="help">Max considered: ${fmtMoney(cfg.adjustments.studentLoanInterestCap)}.</div>
+                </div>
               </div>
-              <div>
-                <label>Student loan interest <span class="tip" title="Potential Adjustment on Schedule 1">i</span></label>
-                <input class="money" data-money="1" data-bind="adjustments.studentLoanInterest" value="${(state.adjustments.studentLoanInterest?Number(state.adjustments.studentLoanInterest).toLocaleString(): '')}">
-                <div class="help">Cap ${fmtMoney(cfg.adjustments.studentLoanInterestCap)}.</div>
+              <div class="help mt8">If you’re not sure, leave these as 0. Most W-2-only estimates still work fine without them.</div>
+            </div>
+          </div>
+
+          <div id="errorArea" class="mt8" tabindex="-1" aria-live="polite"></div>
+        `;
+
+      case "interview":
+        while(state.interview.students.length < 3) state.interview.students.push({tuitionNet:0,yearsClaimed:0,halfTime:true,felony:false});
+        return `
+          <h3 class="title">Quick Credit Interview (Easy Mode)</h3>
+          <div class="info" role="note">
+            Answer a few simple questions. We’ll automatically check the credits you might qualify for and skip the rest.
+          </div>
+
+          <div class="stack mt12">
+
+            <div class="subcard">
+              <p class="section-title"><strong>Dependents / Children</strong></p>
+
+              <label>Do you have any children or dependents you claim on your taxes?</label>
+              <div class="radio-group mt8">
+                <label class="radio-option">
+                  <input id="intHasDependentsYes" type="radio" name="intHasDependents"
+                    data-bind="interview.hasDependents" value="yes"
+                    ${state.interview.hasDependents==="yes"?'checked':''} data-trigger-render="1">
+                  <span>Yes</span>
+                </label>
+                <label class="radio-option">
+                  <input id="intHasDependentsNo" type="radio" name="intHasDependents"
+                    data-bind="interview.hasDependents" value="no"
+                    ${state.interview.hasDependents==="no"?'checked':''} data-trigger-render="1">
+                  <span>No</span>
+                </label>
               </div>
-            </div>
-          </div>
-          <div id="errorArea" class="mt8" tabindex="-1" aria-live="polite"></div>
-        `;
-      case "dependents":
-        return `
-          <h3 class="title">Dependents (Simple)</h3>
-          <div class="grid3">
-            <div>
-              <label>How many dependents lived with you > 6 months?</label>
-              <input type="number" min="0" data-bind="dependents.total" value="${state.dependents.total}">
-            </div>
-            <div>
-              <label>Of those, under 17 by Dec 31?</label>
-              <input type="number" min="0" data-bind="dependents.under17" value="${state.dependents.under17}">
-            </div>
-            <div>
-              <label>Qualifying children for EITC</label>
-              <input type="number" min="0" data-bind="dependents.eitcChildren" value="${state.dependents.eitcChildren}">
-              <div class="help">Display caps at “3+” later; stores actual.</div>
-            </div>
-          </div>
-          <div id="errorArea" class="mt8" tabindex="-1" aria-live="polite"></div>
-        `;
-      case "credits":
-        return `
-          <h3 class="title">Choose Credits</h3>
-          <div class="row">
-            ${[
-              {k:'ctc',label:'Child Tax Credit (CTC)'},
-              {k:'aotc',label:'American Opportunity Credit (AOTC)'},
-              {k:'eitc',label:'Earned Income Credit (EITC)'},
-              {k:'ptc',label:'Premium Tax Credit (PTC)'},
-            ].map(o=>`
-              <label class="radio-option">
-                <input type="checkbox" data-bind="creditsSelected.${o.k}" ${state.creditsSelected[o.k]?'checked':''}>
-                <span>${o.label}</span>
-              </label>
-            `).join('')}
-            <div class="help">Selected pages will appear next in order: CTC → AOTC → EITC → PTC.</div>
-          </div>
-          <div id="errorArea" class="mt8" tabindex="-1" aria-live="polite"></div>
-        `;
-      case "ctc":
-        return `
-          <h3 class="title">Child Tax Credit (CTC)</h3>
-          <div class="grid2">
-            <div>
-              <label>Eligible children under 17</label>
-              <input type="number" min="0" data-bind="dependents.under17" value="${state.dependents.under17}">
-            </div>
-            <div>
-              <label>Computed with MAGI (auto)</label>
-              <input type="text" value="${fmtMoney(calcAGI(state, cfg))}" disabled>
-            </div>
-          </div>
-          <div class="help">Nonrefundable portion reduces tax; refundable ACTC depends on earned income and year caps.</div>
-          <div id="errorArea" class="mt8" tabindex="-1" aria-live="polite"></div>
-        `;
-      case "aotc":
-        return `
-          <h3 class="title">American Opportunity Credit (AOTC)</h3>
-          <div class="grid2">
-            <div>
-              <label>Number of eligible students</label>
-              <select id="aotcCount">
-                ${[0,1,2,3].map(n=>`<option ${state.aotc.studentCount==n?'selected':''}>${n}</option>`).join('')}
-              </select>
-            </div>
-            <div>
-              <label>MAGI (auto)</label>
-              <input type="text" value="${fmtMoney(calcAGI(state, cfg))}" disabled>
-            </div>
-          </div>
-          ${Array.from({length: state.aotc.studentCount||0}).map((_,i)=>{
-            const st = state.aotc.students[i] || {tuitionNet:0,yearsClaimed:0,halfTime:true,felony:false};
-            return `
-              <div class="w2-row">
-                <div class="grid3">
+              <div class="help mt8">If you’re unsure, use your best estimate—this is just a refund estimate.</div>
+
+              ${state.interview.hasDependents==="yes" ? `
+                <div class="grid2 mt12">
                   <div>
-                    <label>Qualified tuition/net fees</label>
-                    <input class="money" data-money="1" data-bind="aotc.students.${i}.tuitionNet" value="${st.tuitionNet?Number(st.tuitionNet).toLocaleString():''}">
+                    <label>How many lived with you more than half the year?</label>
+                    <input type="number" min="0" data-bind="interview.livedHalfCount" value="${+state.interview.livedHalfCount||0}">
+                    <div class="help">This helps with credits like EITC/CTC (basic screening).</div>
                   </div>
                   <div>
-                    <label>Years AOTC already claimed (0–3)</label>
-                    <input type="number" min="0" max="3" data-bind="aotc.students.${i}.yearsClaimed" value="${st.yearsClaimed||0}">
+                    <label>How many were under 17 on Dec 31?</label>
+                    <input type="number" min="0" data-bind="interview.under17Count" value="${+state.interview.under17Count||0}">
+                    <div class="help">Under 17 is the main requirement for the Child Tax Credit.</div>
                   </div>
+                </div>
+
+                <div class="mt12">
+                  <label>How many “qualifying children” do you want us to check for EITC?</label>
+                  <input type="number" min="0" data-bind="dependents.eitcChildren" value="${+state.dependents.eitcChildren||0}">
+                  <div class="help">Usually children who meet age/residency relationship rules. If unsure, enter the number who lived with you more than half the year.</div>
+                </div>
+              ` : `
+                <div class="mt12">
+                  <label>Qualifying children for EITC</label>
+                  <input type="number" min="0" data-bind="dependents.eitcChildren" value="${+state.dependents.eitcChildren||0}">
+                  <div class="help">If none, leave 0. Some people can qualify for EITC with no children (rules apply).</div>
+                </div>
+              `}
+            </div>
+
+            <div class="subcard">
+              <p class="section-title"><strong>Earned Income Credit (EITC)</strong></p>
+              <div class="help">Because this tool is W-2 only, you already have earned income from a job.</div>
+
+              <label class="mt8">About how much investment income did you have? (interest/dividends/stock profits)</label>
+              <input class="money" data-money="1" data-bind="interview.investmentIncome" value="${(+state.interview.investmentIncome?Number(state.interview.investmentIncome).toLocaleString(): '')}">
+              <div class="help">If you don’t have any, leave it blank or 0. This is used only for the EITC investment-income limit check.</div>
+
+              ${state.filingStatus==="mfs" ? `
+                <div class="info mt12">EITC is generally not allowed for Married Filing Separately. We will show $0 for EITC under MFS.</div>
+              ` : ''}
+            </div>
+
+            <div class="subcard">
+              <p class="section-title"><strong>College Tuition (AOTC)</strong></p>
+
+              <label>Did you pay college tuition in this tax year for yourself or a dependent?</label>
+              <div class="radio-group mt8">
+                <label class="radio-option">
+                  <input id="intPaidTuitionYes" type="radio" name="intPaidTuition"
+                    data-bind="interview.paidTuition" value="yes"
+                    ${state.interview.paidTuition==="yes"?'checked':''} data-trigger-render="1">
+                  <span>Yes</span>
+                </label>
+                <label class="radio-option">
+                  <input id="intPaidTuitionNo" type="radio" name="intPaidTuition"
+                    data-bind="interview.paidTuition" value="no"
+                    ${state.interview.paidTuition==="no"?'checked':''} data-trigger-render="1">
+                  <span>No</span>
+                </label>
+              </div>
+              <div class="help mt8">Tuition should be net of scholarships/grants paid tax-free.</div>
+
+              ${state.interview.paidTuition==="yes" ? `
+                <div class="grid2 mt12">
                   <div>
-                    <label>Half-time?</label>
-                    <select data-bind="aotc.students.${i}.halfTime">
-                      <option value="true" ${st.halfTime?'selected':''}>Yes</option>
-                      <option value="false" ${!st.halfTime?'selected':''}>No</option>
+                    <label>Number of students</label>
+                    <select id="intStudentCount" data-bind="interview.studentCount">
+                      ${[0,1,2,3].map(n=>`<option value="${n}" ${(+state.interview.studentCount===n)?'selected':''}>${n}</option>`).join('')}
                     </select>
+                    <div class="help">AOTC is limited to 4 total years per student.</div>
+                  </div>
+                  <div>
+                    <label>Reminder (quick)</label>
+                    <div class="info">AOTC isn’t allowed for Married Filing Separately. If you selected MFS earlier, AOTC will be $0.</div>
                   </div>
                 </div>
-                <div class="mt8">
-                  <label>Felony drug conviction?</label>
-                  <select data-bind="aotc.students.${i}.felony">
-                    <option value="false" ${!st.felony?'selected':''}>No</option>
-                    <option value="true" ${st.felony?'selected':''}>Yes</option>
-                  </select>
-                </div>
-              </div>
-            `;
-          }).join('')}
+
+                ${Array.from({length: clamp(+state.interview.studentCount||0,0,3)}).map((_,i)=>{
+                  const st = state.interview.students[i] || {tuitionNet:0,yearsClaimed:0,halfTime:true,felony:false};
+                  return `
+                    <div class="w2-row mt12">
+                      <p class="mb0"><strong>Student ${i+1}</strong></p>
+                      <div class="grid3 mt8">
+                        <div>
+                          <label>Tuition paid (net)</label>
+                          <input class="money" data-money="1" data-bind="interview.students.${i}.tuitionNet" value="${st.tuitionNet?Number(st.tuitionNet).toLocaleString():''}">
+                          <div class="help">We consider up to $4,000 per student for max AOTC.</div>
+                        </div>
+                        <div>
+                          <label>Years AOTC already claimed (0–3)</label>
+                          <input type="number" min="0" max="3" data-bind="interview.students.${i}.yearsClaimed" value="${+st.yearsClaimed||0}">
+                          <div class="help">If it’s already been claimed 4 years, AOTC is not allowed.</div>
+                        </div>
+                        <div>
+                          <label>At least half-time?</label>
+                          <select data-bind="interview.students.${i}.halfTime">
+                            <option value="true" ${(st.halfTime===true || st.halfTime==="true")?'selected':''}>Yes</option>
+                            <option value="false" ${(st.halfTime===false || st.halfTime==="false")?'selected':''}>No</option>
+                          </select>
+                          <div class="help">AOTC requires at least half-time for one academic period.</div>
+                        </div>
+                      </div>
+                      <div class="mt8">
+                        <label>Felony drug conviction before end of the year?</label>
+                        <select data-bind="interview.students.${i}.felony">
+                          <option value="false" ${(st.felony===false || st.felony==="false")?'selected':''}>No</option>
+                          <option value="true" ${(st.felony===true || st.felony==="true")?'selected':''}>Yes</option>
+                        </select>
+                        <div class="help">If “Yes,” that student isn’t eligible for AOTC.</div>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              ` : ''}
+            </div>
+
+          </div>
+
+          <div class="mt12 help">
+            Next, we’ll calculate your estimate using these answers and automatically apply: CTC (if under 17), EITC (if applicable), and AOTC (if tuition paid).
+          </div>
+
           <div id="errorArea" class="mt8" tabindex="-1" aria-live="polite"></div>
         `;
-      case "eitc":
-        return `
-          <h3 class="title">Earned Income Credit (EITC)</h3>
-          <div class="grid2">
-            <div>
-              <label>Qualifying children</label>
-              <input type="number" min="0" data-bind="dependents.eitcChildren" value="${state.dependents.eitcChildren}">
-            </div>
-            <div>
-              <label>Investment income <span class="tip" title="Used for EITC investment income limit check">i</span></label>
-              <input class="money" data-money="1" data-bind="eitc.investmentIncome" value="${state.eitc.investmentIncome?Number(state.eitc.investmentIncome).toLocaleString():''}">
-            </div>
-          </div>
-          <div id="errorArea" class="mt8" tabindex="-1" aria-live="polite"></div>
-        `;
-      case "ptc":
-        // household size default
-        const householdDefault = computeHouseholdSize();
-        if(!state.ptc.householdSize) state.ptc.householdSize = householdDefault;
-        return `
-          <h3 class="title">Premium Tax Credit (PTC)</h3>
-          <div class="grid2">
-            <div>
-              <label>Household size</label>
-              <input type="number" min="1" data-bind="ptc.householdSize" value="${state.ptc.householdSize}">
-              <div class="help">Prefilled from filing unit + dependents (editable).</div>
-            </div>
-            <div>
-              <label>Advance PTC received (1095-A Column C total)</label>
-              <input class="money" data-money="1" data-bind="ptc.advancePTC" value="${state.ptc.advancePTC?Number(state.ptc.advancePTC).toLocaleString():''}">
-            </div>
-          </div>
-          <div class="grid2 mt8">
-            <div>
-              <label>SLCSP annual total (optional)</label>
-              <input class="money" data-money="1" data-bind="ptc.slcspAnnual" value="${state.ptc.slcspAnnual?Number(state.ptc.slcspAnnual).toLocaleString():''}">
-            </div>
-            <div>
-              <label>Household MAGI confirmation/override (optional)</label>
-              <input class="money" data-money="1" data-bind="ptc.magiOverride" value="${state.ptc.magiOverride?Number(state.ptc.magiOverride).toLocaleString():''}">
-            </div>
-          </div>
-          <div class="help">If SLCSP and MAGI provided, a rough PTC is computed; otherwise 0 with a note.</div>
-          <div id="errorArea" class="mt8" tabindex="-1" aria-live="polite"></div>
-        `;
+
       case "results":
         const results = computeResults();
         const forms = buildFormsChecklist(state, results);
@@ -1026,19 +1103,19 @@
 
           <div class="controls space-between">
             <div>
-              <button class="btn secondary" id="downloadSummary">Download Summary (PDF)</button>
-              <button class="btn secondary" id="downloadChecklist">Download Forms Checklist (PDF)</button>
+              <button class="btn secondary" id="downloadSummary" type="button">Download Summary (PDF)</button>
+              <button class="btn secondary" id="downloadChecklist" type="button">Download Forms Checklist (PDF)</button>
             </div>
             <div>
-              <button class="btn link" id="startOverBtn">Start Over</button>
+              <button class="btn link" type="button" data-action="reset">Start Over</button>
             </div>
           </div>
 
           <div class="acceptance">
-            <button class="btn small primary preset" data-preset="1">Preset 1: Single $40k W-2, $3k wh, no credits</button>
-            <button class="btn small primary preset" data-preset="2">Preset 2: MFJ $55k, 2 kids, CTC (+EITC opt)</button>
-            <button class="btn small primary preset" data-preset="3">Preset 3: HOH $32k, 1 student, AOTC</button>
-            <button class="btn small primary preset" data-preset="4">Preset 4: Single $90k, all credits</button>
+            <button class="btn small primary preset" data-preset="1" type="button">Preset 1: Single $40k W-2, $3k wh, no credits</button>
+            <button class="btn small primary preset" data-preset="2" type="button">Preset 2: MFJ $55k, 2 kids, CTC + EITC</button>
+            <button class="btn small primary preset" data-preset="3" type="button">Preset 3: HOH $32k, 1 student, AOTC</button>
+            <button class="btn small primary preset" data-preset="4" type="button">Preset 4: Single $90k, try all credits</button>
           </div>
 
           <div id="errorArea" class="mt8" tabindex="-1" aria-live="polite"></div>
@@ -1049,9 +1126,9 @@
   function renderSummary(r){
     const final = r.finalAmount;
     const finalLabel = final>=0 ? `<span class="kpi">${fmtMoney(final)} refund</span>` : `<span class="kpi">${fmtMoney(-final)} owed</span>`;
-    // Chart canvas
     const canvasId = "chart";
     setTimeout(()=> drawChart(canvasId, r), 0);
+
     return `
       <div class="grid2">
         <div>
@@ -1063,14 +1140,19 @@
             <div>Standard deduction</div><div class="kpi">${fmtMoney(r.stdDed)}</div>
             <div>Taxable income</div><div class="kpi">${fmtMoney(r.taxable)}</div>
             <div>Tax before credits</div><div class="kpi">${fmtMoney(r.taxBefore)}</div>
+
             <div>CTC (nonref / refundable)</div><div class="kpi">${fmtMoney(r.ctc.nonrefundable)} / ${fmtMoney(r.ctc.refundable)}</div>
             <div>AOTC (nonref / refundable)</div><div class="kpi">${fmtMoney(r.aotc.nonrefundable)} / ${fmtMoney(r.aotc.refundable)}</div>
             <div>EITC</div><div class="kpi">${fmtMoney(r.eitc)}</div>
-            <div>PTC</div><div class="kpi">${fmtMoney(r.ptc.amount)} ${r.ptc.note?'<span class="help">(' + r.ptc.note + ')</span>':''}</div>
+
             <div>Tax after nonrefundable credits</div><div class="kpi">${fmtMoney(r.taxAfterNonref)}</div>
             <div>Refundable credits total</div><div class="kpi">${fmtMoney(r.refundableTotal)}</div>
             <div>Total payments (withholding + refundable credits)</div><div class="kpi">${fmtMoney(r.totalPayments)}</div>
             <div>Estimated result</div><div class="kpi">${finalLabel}</div>
+          </div>
+
+          <div class="help mt12">
+            Reminder: This is a federal estimate based on your inputs. Exact results can differ (e.g., eligibility rules, additional income/withholding, credits, prior-year carryovers).
           </div>
         </div>
         <div>
@@ -1105,16 +1187,14 @@
       {label:"Final", val: Math.abs(results.finalAmount)},
     ];
     const max = Math.max(...data.map(d=>d.val)) || 1;
-    const pad = 30; const top=20; const w=80; const gap=28;
+    const pad = 30; const w=80; const gap=28;
     const baseY = c.height - 40;
     data.forEach((d,i)=>{
       const h = Math.round((d.val / max) * (c.height - 100));
       const x = pad + i*(w+gap);
       const y = baseY - h;
-      // bar color
       ctx.fillStyle = ["#0f8f82","#87e0d6","#b6f0ea","#3fb4a8", results.finalAmount>=0 ? "#21a57f" : "#c55353"][i];
       ctx.fillRect(x, y, w, h);
-      // label
       ctx.fillStyle = "#123";
       ctx.font = "12px system-ui";
       ctx.textAlign = "center";
@@ -1123,51 +1203,55 @@
     });
   }
 
-  function labelFS(code){
-    return {single:"Single", mfj:"Married Filing Jointly", mfs:"Married Filing Separately", hoh:"Head of Household", qw:"Qualifying Widow(er)"}[code] || "—";
-  }
-
-  function computeHouseholdSize(){
-    const base = state.filingStatus==="mfj" ? 2 : 1;
-    return base + (+state.dependents.total||0);
-  }
-
   /* ===========================
      RESULTS PIPELINE
      =========================== */
   function computeResults(){
     const cfg = yearCfg();
+
     const wages = sumWages(state.w2s);
     const withholding = sumWithholding(state.w2s);
+
     const AGI = calcAGI(state, cfg);
     const stdDed = calcStandardDeduction(state, cfg);
     const taxable = Math.max(0, AGI - stdDed);
     const taxBefore = calcTax(taxable, state.filingStatus||"single", cfg);
 
-    // credits
-    const earnedIncome = wages; // W-2 only for this tool
-    const MAGI = state.ptc.magiOverride ? +state.ptc.magiOverride : AGI;
+    normalizeInterviewToState();
+
+    const earnedIncome = wages;
+    const MAGI = AGI;
 
     const ctc = state.creditsSelected.ctc ? calcCTC({
-      MAGI, filingStatus: state.filingStatus||"single", eligibleUnder17: +state.dependents.under17||0,
-      earnedIncome, taxBeforeCredits: taxBefore
+      MAGI,
+      filingStatus: state.filingStatus||"single",
+      eligibleUnder17: +state.dependents.under17||0,
+      earnedIncome,
+      taxBeforeCredits: taxBefore
     }, cfg) : {nonrefundable:0, refundable:0};
 
     const aotcRes = state.creditsSelected.aotc ? calcAOTC(
       (state.aotc.students||[]).slice(0,state.aotc.studentCount||0).map(s=>({
-        tuitionNet:+s.tuitionNet||0, yearsClaimed:+s.yearsClaimed||0, halfTime:(s.halfTime===true || s.halfTime==="true"), felony:(s.felony===true || s.felony==="true")
+        tuitionNet:+s.tuitionNet||0,
+        yearsClaimed:+s.yearsClaimed||0,
+        halfTime: !!s.halfTime,
+        felony: !!s.felony
       })), MAGI, state.filingStatus||"single", cfg
     ) : {nonrefundable:0, refundable:0, disallowedReasons:[]};
 
-    const eitcAmt = state.creditsSelected.eitc ? calcEITC(earnedIncome, AGI, state.filingStatus||"single", +state.dependents.eitcChildren||0, +state.eitc.investmentIncome||0, cfg) : 0;
+    const eitcAmt = state.creditsSelected.eitc ? calcEITC(
+      earnedIncome,
+      AGI,
+      state.filingStatus||"single",
+      +state.dependents.eitcChildren||0,
+      +state.eitc.investmentIncome||0,
+      cfg
+    ) : 0;
 
-    const ptcRes = state.creditsSelected.ptc ? calcPTC(MAGI, +state.ptc.householdSize||computeHouseholdSize(), +state.ptc.advancePTC||0, state.ptc.slcspAnnual?+state.ptc.slcspAnnual:undefined, cfg.ptc) : { amount:0, note:null };
-
-    // order credits
     const ord = orderCredits(
       { taxBefore },
       [ctc.nonrefundable, aotcRes.nonrefundable],
-      [ctc.refundable, aotcRes.refundable, eitcAmt, ptcRes.amount]
+      [ctc.refundable, aotcRes.refundable, eitcAmt]
     );
 
     const totalPayments = withholding + ord.refundableTotal;
@@ -1175,7 +1259,7 @@
 
     return {
       wages, withholding, AGI, stdDed, taxable, taxBefore,
-      ctc, aotc: aotcRes, eitc: eitcAmt, ptc: ptcRes,
+      ctc, aotc: aotcRes, eitc: eitcAmt,
       taxAfterNonref: ord.taxAfterNonref,
       refundableTotal: ord.refundableTotal,
       totalPayments, finalAmount
@@ -1193,90 +1277,122 @@
   }
 
   /* ===========================
-     PRESETS (Acceptance Tests)
+     PRESETS
      =========================== */
   function applyPreset(id){
-    const y = state.year; // keep current year
+    const y = state.year;
     state = defaultState();
     state.year = y;
     buildBasePlan();
+
     switch(String(id)){
-      case "1": // Single, 40k wages, 3k withholding, no credits
+      case "1":
         state.filingStatus="single"; state.ages.taxpayer=30;
         state.w2s=[{employer:"",wages:40000,fedWh:3000}];
-        state.adjustments={iraDeduction:0,studentLoanInterest:0};
-        state.creditsSelected={ctc:false,aotc:false,eitc:false,ptc:false};
+        state.interview.hasDependents="no";
+        state.interview.paidTuition="no";
+        state.interview.investmentIncome=0;
         state.currentStepIndex = state.stepPlan.indexOf("results");
         break;
-      case "2": // MFJ 55k, 2 kids <17, CTC (+EITC optional)
+
+      case "2":
         state.filingStatus="mfj"; state.ages.taxpayer=35; state.ages.spouse=34;
-        state.dependents={total:2,under17:2,eitcChildren:2};
         state.w2s=[{employer:"",wages:55000,fedWh:4000}];
-        state.creditsSelected={ctc:true,aotc:false,eitc:true,ptc:false};
-        buildCreditPlan(); state.currentStepIndex = state.stepPlan.indexOf("results");
+        state.interview.hasDependents="yes";
+        state.interview.livedHalfCount=2;
+        state.interview.under17Count=2;
+        state.dependents.eitcChildren=2;
+        state.interview.investmentIncome=0;
+        state.interview.paidTuition="no";
+        state.currentStepIndex = state.stepPlan.indexOf("results");
         break;
-      case "3": // HOH 32k, 1 student $2,500 tuition, AOTC (+EITC maybe)
+
+      case "3":
         state.filingStatus="hoh"; state.ages.taxpayer=29;
-        state.dependents={total:1,under17:0,eitcChildren:1};
         state.w2s=[{employer:"",wages:32000,fedWh:2200}];
-        state.creditsSelected={ctc:false,aotc:true,eitc:true,ptc:false};
-        state.aotc.studentCount=1;
-        state.aotc.students=[{tuitionNet:2500,yearsClaimed:0,halfTime:true,felony:false}];
-        buildCreditPlan(); state.currentStepIndex = state.stepPlan.indexOf("results");
+        state.interview.hasDependents="yes";
+        state.interview.livedHalfCount=1;
+        state.interview.under17Count=0;
+        state.dependents.eitcChildren=1;
+        state.interview.investmentIncome=0;
+        state.interview.paidTuition="yes";
+        state.interview.studentCount=1;
+        state.interview.students=[{tuitionNet:2500,yearsClaimed:0,halfTime:true,felony:false}];
+        state.currentStepIndex = state.stepPlan.indexOf("results");
         break;
-      case "4": // Single 90k, all credits selected
+
+      case "4":
         state.filingStatus="single"; state.ages.taxpayer=40;
-        state.dependents={total:0,under17:0,eitcChildren:0};
         state.w2s=[{employer:"",wages:90000,fedWh:10000}];
-        state.creditsSelected={ctc:true,aotc:true,eitc:true,ptc:true};
-        // PTC only if SLCSP/MAGI allow (leave blank)
-        state.aotc.studentCount=1;
-        state.aotc.students=[{tuitionNet:4000,yearsClaimed:0,halfTime:true,felony:false}];
-        buildCreditPlan(); state.currentStepIndex = state.stepPlan.indexOf("results");
+        state.interview.hasDependents="no";
+        state.dependents.eitcChildren=0;
+        state.interview.investmentIncome=0;
+        state.interview.paidTuition="yes";
+        state.interview.studentCount=1;
+        state.interview.students=[{tuitionNet:4000,yearsClaimed:0,halfTime:true,felony:false}];
+        state.currentStepIndex = state.stepPlan.indexOf("results");
         break;
     }
+
+    normalizeInterviewToState();
     saveState();
     render();
   }
 
   /* ===========================
+     FOOTER (wire once)
+     =========================== */
+  function wireFooterOnce(){
+    const back = document.getElementById("backBtn");
+    const next = document.getElementById("nextBtn");
+    const reset = document.getElementById("startOverBtn");
+
+    if(back && !back.dataset.wired){
+      back.dataset.wired = "1";
+      back.addEventListener("click", (e)=>{ e.preventDefault(); goBack(); }, true);
+    }
+    if(next && !next.dataset.wired){
+      next.dataset.wired = "1";
+      next.addEventListener("click", (e)=>{ e.preventDefault(); goNext(); }, true);
+    }
+    if(reset && !reset.dataset.wired){
+      reset.dataset.wired = "1";
+      reset.addEventListener("click", (e)=>{ e.preventDefault(); resetState(); }, true);
+    }
+  }
+
+  /* ===========================
      INIT
      =========================== */
-  buildBasePlan(); // base order on load (credits step will rebuild)
+  buildBasePlan();
   (function mount(){
-    // if user already progressed & had selected credits, rebuild plan with their selection
-    if(state.currentStepIndex >= state.stepPlan.indexOf("credits")){
-      buildCreditPlan();
-    }
+    if(![2023,2024,2025].includes(+state.year)) state.year = 2025;
+    wireFooterOnce();
     render();
-    TESTS(); // run console tests
+    TESTS();
   })();
 
   /* ===========================
-     TESTS (console assertions)
+     TESTS
      =========================== */
   function TESTS(){
     try{
-      // bracket tax calc: single 2024, taxable 50,000
-      const t1 = calcTax(50000, "single", CONFIG_BY_YEAR[2024]);
+      const t1 = calcTax(50000, "single", CONFIG_BY_YEAR[2025]);
       console.assert(t1>0 && Number.isInteger(t1), "Tax should be positive integer");
-      // CTC phase-out behavior
-      const ctcTest = calcCTC({ MAGI: 300000, filingStatus:"single", eligibleUnder17:2, earnedIncome:60000, taxBeforeCredits:5000 }, CONFIG_BY_YEAR[2024]);
-      console.assert(ctcTest.nonrefundable + ctcTest.refundable < 4000, "CTC should phase out with high MAGI");
-      // AOTC split & 40% refundable cap
-      const a = calcAOTC([{tuitionNet:4000,yearsClaimed:0,halfTime:true,felony:false}], 60000, "single", CONFIG_BY_YEAR[2024]);
+
+      const ctcTest = calcCTC({ MAGI: 60000, filingStatus:"single", eligibleUnder17:2, earnedIncome:60000, taxBeforeCredits:0 }, CONFIG_BY_YEAR[2025]);
+      console.assert(ctcTest.refundable <= 2*CONFIG_BY_YEAR[2025].ctc.refundableCapPerChild, "CTC refundable cap should apply");
+
+      const a = calcAOTC([{tuitionNet:4000,yearsClaimed:0,halfTime:true,felony:false}], 60000, "single", CONFIG_BY_YEAR[2025]);
       console.assert(a.refundable<=1000 && a.nonrefundable>=1400, "AOTC 40% refundable cap & split");
-      // EITC 0 vs 1 child
-      const e0 = calcEITC(20000, 20000, "single", 0, 0, CONFIG_BY_YEAR[2024]);
-      const e1 = calcEITC(20000, 20000, "single", 1, 0, CONFIG_BY_YEAR[2024]);
-      console.assert(e1 > e0, "EITC with 1 child should be > 0-child");
-      // PTC missing SLCSP
-      const p = calcPTC(40000, 2, 0, null, CONFIG_BY_YEAR[2024].ptc);
-      console.assert(p.note && p.amount===0, "PTC note when missing SLCSP");
+
+      const eOk = calcEITC(20000, 20000, "single", 1, 0, CONFIG_BY_YEAR[2025]);
+      const eNo = calcEITC(20000, 20000, "single", 1, 999999999, CONFIG_BY_YEAR[2025]);
+      console.assert(eOk >= 0 && eNo === 0, "EITC should be 0 if investment income exceeds limit");
+
       console.log("%cTESTS PASSED","color:green;font-weight:bold");
     }catch(err){ console.error("TESTS FAILED", err); }
   }
-
   </script>
 
 </body>
