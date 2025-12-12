@@ -262,7 +262,7 @@
       estimateW2: false,
       est: { payType:"hourly", hourly:0, hoursPerWeek:0, weeks:0, annualSalary:0, calcWages:0 },
       estimateWhIfBlank: true,
-      whEst: { payFreq:"biweekly", claimDeps:"no", depCount:0, extraPerPay:0, estimatedAnnual:0 },
+      whEst: { extraAnnual:0, estimatedAnnual:0, calculated:false },
       ui: { hasW2Form: null, knowsBox2: null, wantsEstBox2: null }
     }],
     adjustments: { iraDeduction:0, studentLoanInterest:0 },
@@ -336,8 +336,10 @@
     if(!w) return 0;
     const box2 = +w.fedWh||0;
     if(box2>0) return box2;
-    if(w.estimateWhIfBlank && (+w.whEst.estimatedAnnual||0) > 0){
-      return +w.whEst.estimatedAnnual||0;
+
+    // ✅ if estimation is enabled AND calculated at least once, use it even if $0
+    if(w.estimateWhIfBlank && w.whEst && w.whEst.calculated===true){
+      return +w.whEst.estimatedAnnual || 0;
     }
     return 0;
   }
@@ -472,8 +474,7 @@
     return { taxAfterNonref, refundableTotal };
   }
 
-  const PAY_PERIODS = { weekly:52, biweekly:26, semimonthly:24, monthly:12 };
-
+  // ✅ UPDATED: no pay frequency, no dependents reduction, extraAnnual is annual add-on
   function estimateAnnualWithholdingForW2(w){
     const wages = +effectiveWages(w)||0;
     if(wages<=0) return 0;
@@ -481,22 +482,10 @@
     const status = state.filingStatus || "single";
     const stdDed = calcStandardDeduction();
     const taxable = Math.max(0, wages - stdDed);
-    let tax = calcTax(taxable, status);
+    const tax = calcTax(taxable, status);
 
-    const claimDeps = (w.whEst.claimDeps||"no") === "yes";
-    let depCount = claimDeps ? (+w.whEst.depCount||0) : 0;
-    if(claimDeps && depCount<=0) depCount = 1;
-    if(depCount>0){
-      tax = Math.max(0, tax - (depCount * 500));
-    }
-
-    const extra = Math.max(0, +w.whEst.extraPerPay||0);
-    const pp = PAY_PERIODS[w.whEst.payFreq||"biweekly"] || 26;
-
-    const basePerPay = tax / pp;
-    const annualExtra = extra * pp;
-
-    return Math.round((basePerPay * pp) + annualExtra);
+    const extra = Math.max(0, +((w.whEst && w.whEst.extraAnnual) || 0) || 0);
+    return Math.round(Math.max(0, tax + extra));
   }
 
   function computeResults(){
@@ -687,7 +676,7 @@
         wages:0, fedWh:0, estimateW2:false,
         est:{ payType:"hourly", hourly:0, hoursPerWeek:0, weeks:0, annualSalary:0, calcWages:0 },
         estimateWhIfBlank:true,
-        whEst:{ payFreq:"biweekly", claimDeps:"no", depCount:0, extraPerPay:0, estimatedAnnual:0 },
+        whEst:{ extraAnnual:0, estimatedAnnual:0, calculated:false },
         ui:{ hasW2Form:null, knowsBox2:null, wantsEstBox2:null }
       });
     }
@@ -696,9 +685,14 @@
     }
   }
 
+  function isBox2EstEnabled(w){
+    return (w?.ui?.knowsBox2==="no" && w?.ui?.wantsEstBox2==="yes");
+  }
+
   function normalizeInterviewFlags(){
     state.w2s.forEach(w=>{
       if(!w.ui) w.ui = {hasW2Form:null, knowsBox2:null, wantsEstBox2:null};
+      if(!w.whEst) w.whEst = { extraAnnual:0, estimatedAnnual:0, calculated:false };
 
       if(w.ui.hasW2Form==="yes"){
         w.estimateW2 = false;
@@ -712,26 +706,30 @@
       if(w.ui.knowsBox2==="yes"){
         w.estimateWhIfBlank = false;
         w.whEst.estimatedAnnual = 0;
+        w.whEst.calculated = false;
         w.ui.wantsEstBox2 = null;
       }
       if(w.ui.knowsBox2==="no"){
         if(+w.fedWh>0) w.fedWh = 0;
+
         if(w.ui.wantsEstBox2==="yes"){
           w.estimateWhIfBlank = true;
+          // (calc happens immediately on change handler / live typing)
         } else if(w.ui.wantsEstBox2==="no"){
           w.estimateWhIfBlank = false;
           w.whEst.estimatedAnnual = 0;
+          w.whEst.calculated = false;
         }
       }
     });
   }
 
   /* ✅ LIVE preview helpers */
-  function paintPreview(el, value){
+  function paintPreview(el, value, calculated=false){
     if(!el) return;
     const v = Math.max(0, +value||0);
     el.value = fmtMoney(v);
-    el.classList.toggle("filled", v > 0);
+    el.classList.toggle("filled", !!calculated);
   }
 
   function recalcLiveW2(i){
@@ -751,23 +749,37 @@
       w.est.calcWages = Math.round(estW);
     }
 
-    // Update previews (no render)
-    paintPreview(document.getElementById("wagePreview_"+i), effectiveWages(w));
-    paintPreview(document.getElementById("estWagePreview_"+i), w.est.calcWages);
+    // Wage previews stay value-based (green when >0) - keep current behavior by passing calculated flag as (v>0)
+    const wageEl = document.getElementById("wagePreview_"+i);
+    if(wageEl){
+      const v = Math.max(0, +effectiveWages(w)||0);
+      wageEl.value = fmtMoney(v);
+      wageEl.classList.toggle("filled", v>0);
+    }
 
-    // If withholding estimator is enabled, keep Box2 preview in sync too
-    if(w.estimateWhIfBlank){
-      paintPreview(document.getElementById("box2Preview_"+i), +w.whEst.estimatedAnnual||0);
+    const estEl = document.getElementById("estWagePreview_"+i);
+    if(estEl){
+      const v = Math.max(0, +w.est.calcWages||0);
+      estEl.value = fmtMoney(v);
+      estEl.classList.toggle("filled", v>0);
+    }
+
+    // ✅ If Box2 estimator is enabled, recalc instantly on wage changes
+    if(isBox2EstEnabled(w)){
+      w.whEst.estimatedAnnual = estimateAnnualWithholdingForW2(w);
+      w.whEst.calculated = true;
+      paintPreview(document.getElementById("box2Preview_"+i), w.whEst.estimatedAnnual, w.whEst.calculated);
     }
   }
 
   function maybeAutoEstimateBox2(i){
     const w = state.w2s[i];
     if(!w) return;
-    if(!w.estimateWhIfBlank) return;
+    if(!isBox2EstEnabled(w)) return;
 
     w.whEst.estimatedAnnual = estimateAnnualWithholdingForW2(w);
-    paintPreview(document.getElementById("box2Preview_"+i), w.whEst.estimatedAnnual);
+    w.whEst.calculated = true;
+    paintPreview(document.getElementById("box2Preview_"+i), w.whEst.estimatedAnnual, w.whEst.calculated);
   }
 
   function goNext(){
@@ -825,7 +837,7 @@
     attachHandlers(card);
     updateTotals();
 
-    // ✅ DO NOT auto-scroll here anymore (prevents jumps while estimating)
+    // ✅ DO NOT auto-scroll here anymore
   }
 
   function attachHandlers(scope){
@@ -841,14 +853,13 @@
         saveState();
         updateTotals();
 
-        // ✅ live wage preview when typing Box 1 or salary/extra withholding
         const m = String(el.dataset.bind||"").match(/^w2s\.(\d+)\./);
         if(m){
           const i = +m[1];
           recalcLiveW2(i);
 
-          // if they typed extra withholding, update Box2 estimate live (but only if estimator is on)
-          if(String(el.dataset.bind||"").includes(".whEst.extraPerPay")){
+          // ✅ extra annual withholding updates Box2 immediately when enabled
+          if(String(el.dataset.bind||"").includes(".whEst.extraAnnual")){
             maybeAutoEstimateBox2(i);
             saveState();
             updateTotals();
@@ -866,33 +877,16 @@
         saveState();
         updateTotals();
 
-        // ✅ live wage preview when typing hourly inputs
         const m = String(el.dataset.bind||"").match(/^w2s\.(\d+)\./);
         if(m){
           const i = +m[1];
           recalcLiveW2(i);
-          // if dep count changed and estimator is on, keep Box2 estimate in sync
-          if(String(el.dataset.bind||"").includes(".whEst.depCount")){
-            maybeAutoEstimateBox2(i);
-          }
         }
       });
     });
 
     $$('select, input[type="radio"], input[type="checkbox"]', scope).forEach(el=>{
       el.addEventListener('change', ()=>{
-        // ✅ special-case pay frequency: compute estimate immediately + NO render + NO scroll jump
-        const bind = String(el.dataset.bind||"");
-        const payFreqMatch = bind.match(/^w2s\.(\d+)\.whEst\.payFreq$/);
-        if(payFreqMatch){
-          const i = +payFreqMatch[1];
-          setByPath(state, bind, el.value);
-          maybeAutoEstimateBox2(i);
-          saveState();
-          updateTotals();
-          return; // ✅ stop here: no rebuild/render
-        }
-
         if(el.type==="checkbox") setByPath(state, el.dataset.bind, el.checked);
         else if(el.type==="radio") setByPath(state, el.dataset.bind, el.value);
         else setByPath(state, el.dataset.bind, el.value);
@@ -915,7 +909,7 @@
               wages:0, fedWh:0, estimateW2:false,
               est:{ payType:"hourly", hourly:0, hoursPerWeek:0, weeks:0, annualSalary:0, calcWages:0 },
               estimateWhIfBlank:true,
-              whEst:{ payFreq:"biweekly", claimDeps:"no", depCount:0, extraPerPay:0, estimatedAnnual:0 },
+              whEst:{ extraAnnual:0, estimatedAnnual:0, calculated:false },
               ui:{ hasW2Form:null, knowsBox2:null, wantsEstBox2:null }
             }];
             state.w2s[0].wages = 0;
@@ -924,6 +918,7 @@
             state.w2s[0].est.calcWages = 0;
             state.w2s[0].estimateWhIfBlank = false;
             state.w2s[0].whEst.estimatedAnnual = 0;
+            state.w2s[0].whEst.calculated = false;
             state.w2s[0].ui = {hasW2Form:null, knowsBox2:null, wantsEstBox2:null};
           } else {
             if(!state.work.jobCount) state.work.jobCount = 1;
@@ -932,7 +927,6 @@
         }
 
         if(el.dataset.bind==="ui.enterAdjustments"){
-          // radio returns "true"/"false" strings -> normalize to boolean
           state.ui.enterAdjustments = (String(el.value) === "true");
           if(!state.ui.enterAdjustments){
             state.adjustments.iraDeduction = 0;
@@ -952,8 +946,27 @@
           state.interview.students = [{tuitionNet:0,yearsClaimed:0,halfTime:true,felony:false}];
         }
 
-        if(String(el.dataset.bind||"").includes("w2s.") && String(el.dataset.bind||"").includes(".ui.")){
+        const bindStr = String(el.dataset.bind||"");
+        const isW2Ui = (bindStr.includes("w2s.") && bindStr.includes(".ui."));
+        if(isW2Ui){
           normalizeInterviewFlags();
+
+          // ✅ IMMEDIATE calc when user selects "Yes (estimate it)"
+          const m = bindStr.match(/^w2s\.(\d+)\.ui\.wantsEstBox2$/);
+          if(m){
+            const i = +m[1];
+            const w = state.w2s[i];
+            if(w && w.ui && w.ui.wantsEstBox2==="yes" && w.ui.knowsBox2==="no"){
+              w.estimateWhIfBlank = true;
+              w.whEst.estimatedAnnual = estimateAnnualWithholdingForW2(w);
+              w.whEst.calculated = true;
+            }
+            if(w && w.ui && w.ui.wantsEstBox2==="no"){
+              w.estimateWhIfBlank = false;
+              w.whEst.estimatedAnnual = 0;
+              w.whEst.calculated = false;
+            }
+          }
         }
 
         rebuildStepPlan();
@@ -969,7 +982,7 @@
           wages:0, fedWh:0, estimateW2:false,
           est:{ payType:"hourly", hourly:0, hoursPerWeek:0, weeks:0, annualSalary:0, calcWages:0 },
           estimateWhIfBlank:true,
-          whEst:{ payFreq:"biweekly", claimDeps:"no", depCount:0, extraPerPay:0, estimatedAnnual:0 },
+          whEst:{ extraAnnual:0, estimatedAnnual:0, calculated:false },
           ui:{ hasW2Form:null, knowsBox2:null, wantsEstBox2:null }
         });
         state.work.jobCount = state.w2s.length;
@@ -987,7 +1000,7 @@
             wages:0, fedWh:0, estimateW2:false,
             est:{ payType:"hourly", hourly:0, hoursPerWeek:0, weeks:0, annualSalary:0, calcWages:0 },
             estimateWhIfBlank:true,
-            whEst:{ payFreq:"biweekly", claimDeps:"no", depCount:0, extraPerPay:0, estimatedAnnual:0 },
+            whEst:{ extraAnnual:0, estimatedAnnual:0, calculated:false },
             ui:{ hasW2Form:null, knowsBox2:null, wantsEstBox2:null }
           }];
         }
@@ -1012,7 +1025,8 @@
         const w = state.w2s[idx];
         if(!w) return;
         w.whEst.estimatedAnnual = estimateAnnualWithholdingForW2(w);
-        paintPreview(document.getElementById("box2Preview_"+idx), w.whEst.estimatedAnnual);
+        w.whEst.calculated = true;
+        paintPreview(document.getElementById("box2Preview_"+idx), w.whEst.estimatedAnnual, w.whEst.calculated);
         saveState();
         updateTotals();
       };
@@ -1174,7 +1188,6 @@
               ${(state.w2s||[]).slice(0, jobCount).map((w,idx)=>{
                 const ui = w.ui || {hasW2Form:null, knowsBox2:null, wantsEstBox2:null};
                 const calcPreview = Math.max(0, +w.est.calcWages||0);
-                const whPreview = Math.max(0, +w.whEst.estimatedAnnual||0);
 
                 const hasForm = ui.hasW2Form;
                 const knowsBox2 = ui.knowsBox2;
@@ -1186,6 +1199,9 @@
                 const showBox2Field = (knowsBox2==="yes");
                 const showAskWantsEst = (knowsBox2==="no");
                 const showWhEstimatorUI = (knowsBox2==="no" && wantsEst==="yes");
+
+                const whPreview = Math.max(0, +w.whEst.estimatedAnnual||0);
+                const whCalc = (w.whEst && w.whEst.calculated===true);
 
                 return `
                   <div class="w2-row">
@@ -1322,55 +1338,25 @@
                     ${showWhEstimatorUI ? `
                       <div class="section mt12">
                         <div class="section-title">Estimate Box 2 (rough)</div>
-                        <div class="help">This auto-updates when you select pay frequency (and also stays live as you tweak inputs).</div>
+                        <div class="help">Updates instantly when you turn on estimate and when wages change.</div>
 
                         <div class="grid2 mt12">
                           <div>
-                            <label>Pay frequency</label>
-                            <select data-bind="w2s.${idx}.whEst.payFreq">
-                              <option value="weekly" ${w.whEst.payFreq==="weekly"?'selected':''}>Weekly</option>
-                              <option value="biweekly" ${w.whEst.payFreq==="biweekly"?'selected':''}>Biweekly</option>
-                              <option value="semimonthly" ${w.whEst.payFreq==="semimonthly"?'selected':''}>Semi-monthly</option>
-                              <option value="monthly" ${w.whEst.payFreq==="monthly"?'selected':''}>Monthly</option>
-                            </select>
+                            <label>Extra annual withholding (optional)</label>
+                            <input class="money" data-money="1" data-bind="w2s.${idx}.whEst.extraAnnual" value="${(+w.whEst.extraAnnual?Number(w.whEst.extraAnnual).toLocaleString(): '')}">
+                            <div class="help">Adds to the annual estimate (if you know you had extra withheld).</div>
                           </div>
 
                           <div>
                             <label>Estimated Box 2 (preview)</label>
-                            <input id="box2Preview_${idx}" class="money preview-input ${whPreview>0?'filled':''}" type="text" value="${fmtMoney(whPreview)}" readonly>
-                            <div class="help">Turns green when calculated.</div>
+                            <input id="box2Preview_${idx}" class="money preview-input ${whCalc?'filled':''}" type="text" value="${fmtMoney(whPreview)}" readonly>
+                            <div class="help">Turns green after it has calculated (even if $0).</div>
                           </div>
-                        </div>
-
-                        <div class="mt12">
-                          <label>Do you claim dependents on your W-4?</label>
-                          <div class="radio-group mt8">
-                            <label class="radio-option">
-                              <input type="radio" data-bind="w2s.${idx}.whEst.claimDeps" value="yes" ${w.whEst.claimDeps==="yes"?'checked':''}>
-                              <span>Yes</span>
-                            </label>
-                            <label class="radio-option">
-                              <input type="radio" data-bind="w2s.${idx}.whEst.claimDeps" value="no" ${w.whEst.claimDeps!=="yes"?'checked':''}>
-                              <span>No</span>
-                            </label>
-                          </div>
-                        </div>
-
-                        ${w.whEst.claimDeps==="yes" ? `
-                          <div class="mt12">
-                            <label>How many dependents? (rough)</label>
-                            <input type="number" min="0" data-bind="w2s.${idx}.whEst.depCount" value="${+w.whEst.depCount||0}">
-                            <div class="help">If unsure, leave blank (we assume 1 if “Yes”).</div>
-                          </div>
-                        ` : ""}
-
-                        <div class="mt12">
-                          <label>Extra withholding per paycheck (optional)</label>
-                          <input class="money" data-money="1" data-bind="w2s.${idx}.whEst.extraPerPay" value="${(+w.whEst.extraPerPay?Number(w.whEst.extraPerPay).toLocaleString(): '')}">
                         </div>
 
                         <div class="mt12">
                           <button class="btn primary estimateBox2Btn" data-idx="${idx}" type="button">Estimate Box 2</button>
+                          <div class="help mt8">Optional — it already updates instantly.</div>
                         </div>
                       </div>
                     ` : ""}
