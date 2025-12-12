@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -15,6 +14,7 @@
       --shadow:0 8px 20px rgba(0,0,0,.08);
       --radius:14px;
       --gap:12px;
+      --footerH:72px;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -24,118 +24,147 @@
       background:linear-gradient(180deg,var(--mint-100),#e8faf7);
       color:var(--text);
       line-height:1.35;
+      padding-bottom: calc(var(--footerH) + 22px);
     }
     header{ padding:24px 16px 8px; text-align:center; }
     h1{margin:0;font-size:28px;letter-spacing:.2px}
     h2{margin:6px 0 12px;font-size:18px;font-weight:600;color:#2a4a4f}
     .muted{color:#5a6d72;font-size:14px}
 
-```
-.topbar{
-  max-width:1200px;margin:0 auto;padding:0 16px;
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-}
-.topbar .mini{font-size:13px;color:#2a4a4f;font-weight:700}
+    .topbar{
+      max-width:1200px;margin:0 auto;padding:0 16px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+    }
+    .topbar .mini{font-size:13px;color:#2a4a4f;font-weight:800;letter-spacing:.2px}
 
-.progress-wrap{max-width:980px;margin:10px auto 8px auto;padding:0 16px;display:flex;gap:8px;align-items:center;justify-content:center}
-.progress-label{font-size:13px;color:#2a4a4f;min-width:120px;text-align:right}
-.progress{
-  position:relative;flex:1;height:8px;border-radius:999px;background:#d9f4f0;overflow:hidden;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,.06);
-}
-.progress>div{height:100%;background:var(--mint);width:0%;transition:width .35s ease}
+    .progress-wrap{max-width:980px;margin:10px auto 8px auto;padding:0 16px;display:flex;gap:8px;align-items:center;justify-content:center}
+    .progress-label{font-size:13px;color:#2a4a4f;min-width:120px;text-align:right}
+    .progress{
+      position:relative;flex:1;height:8px;border-radius:999px;background:#d9f4f0;overflow:hidden;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,.06);
+    }
+    .progress>div{height:100%;background:var(--mint);width:0%;transition:width .35s ease}
 
-.wrap{max-width:1200px;margin:0 auto;padding:8px 16px 120px 16px;display:grid;grid-template-columns:1fr;gap:16px}
-.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
-.title{margin:0 0 10px;font-size:20px}
-.row{display:grid;grid-template-columns:1fr;gap:var(--gap)}
+    .wrap{max-width:1200px;margin:0 auto;padding:8px 16px 24px 16px;display:grid;grid-template-columns:1fr;gap:16px}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
+    .title{margin:0 0 10px;font-size:20px}
+    .row{display:grid;grid-template-columns:1fr;gap:var(--gap)}
 
-.info{background:#f7fbfc;border:1px dashed #b8dadd;border-radius:12px;padding:12px;color:#34565d}
-.banner{
-  background:#e9faf7;border:1px solid #bfece6;border-radius:12px;padding:12px;
-  display:flex;gap:10px;align-items:flex-start;color:#0f4f49
-}
-.banner strong{white-space:nowrap}
-.pillline{
-  display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;
-  font-size:13px;color:#1a4f49;font-weight:700;margin:8px 0 0;
-}
-.pill{
-  display:inline-flex;gap:8px;align-items:center;
-  background:#ffffff;border:1px solid #bfece6;border-radius:999px;padding:6px 10px;
-  box-shadow:0 4px 12px rgba(0,0,0,.04);
-}
-.pill b{color:#0e4b45}
+    .info{background:#f7fbfc;border:1px dashed #b8dadd;border-radius:12px;padding:12px;color:#34565d}
+    .banner{
+      background:#e9faf7;border:1px solid #bfece6;border-radius:12px;padding:12px;
+      display:flex;gap:10px;align-items:flex-start;color:#0f4f49
+    }
+    .banner strong{white-space:nowrap}
+    .pillline{
+      display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;
+      font-size:13px;color:#1a4f49;font-weight:800;margin:8px 0 0;
+    }
+    .pill{
+      display:inline-flex;gap:8px;align-items:center;
+      background:#ffffff;border:1px solid #bfece6;border-radius:999px;padding:6px 10px;
+      box-shadow:0 4px 12px rgba(0,0,0,.04);
+    }
+    .pill b{color:#0e4b45}
 
-label{font-size:14px;font-weight:700}
-input[type="text"],input[type="number"],select{
-  width:100%;padding:10px 12px;border:1px solid #cfd9dc;border-radius:10px;font-size:15px;outline:0;
-  background:#fff;transition:box-shadow .15s,border-color .15s;
-}
-input:focus,select:focus{box-shadow:0 0 0 3px #a8efe7;border-color:#2bb7a8}
-.help{font-size:12px;color:#6c8187}
-.error{font-size:13px;color:#a72a2a;margin-top:2px}
-.money{ text-align:right }
+    label{font-size:14px;font-weight:800}
+    input[type="text"],input[type="number"],select{
+      width:100%;padding:12px 12px;border:1px solid #cfd9dc;border-radius:12px;font-size:16px;outline:0;
+      background:#fff;transition:box-shadow .15s,border-color .15s;
+    }
+    input:focus,select:focus{box-shadow:0 0 0 3px #a8efe7;border-color:#2bb7a8}
+    .help{font-size:13px;color:#6c8187}
+    .error{font-size:13px;color:#a72a2a;margin-top:2px}
+    .money{ text-align:right }
 
-.radio-group{display:grid;grid-template-columns:1fr;gap:8px}
-.radio-option{display:flex;gap:10px;align-items:center;padding:8px 10px;border:1px solid #d9e6e8;border-radius:10px;cursor:pointer}
-.radio-option input{margin:0}
+    .radio-group{display:grid;grid-template-columns:1fr;gap:10px}
+    .radio-option{
+      display:flex;gap:12px;align-items:center;
+      padding:12px 12px;border:1px solid #d9e6e8;border-radius:14px;cursor:pointer;
+      background:#ffffff;
+      box-shadow:0 2px 10px rgba(0,0,0,.03);
+    }
+    .radio-option input{margin:0;transform:scale(1.1)}
 
-.btn{
-  appearance:none;border:0;border-radius:999px;padding:12px 18px;font-weight:900;cursor:pointer;
-  transition:transform .02s ease, background .15s, color .15s, box-shadow .15s;outline:0;
-  letter-spacing:.2px;
-}
-.btn:active{transform:translateY(1px)}
-.btn.primary{background:var(--mint);color:#fff;box-shadow:0 6px 16px rgba(43,183,168,.25)}
-.btn.primary:hover{background:#23a99b}
-.btn.secondary{background:#f0f8f7;color:#13524b;border:2px solid #bfece6}
-.btn.small{padding:9px 12px;font-size:13px}
-.btn.link{background:transparent;color:#17655c;text-decoration:underline;padding:6px 0;border-radius:6px}
+    .btn{
+      appearance:none;border:0;border-radius:999px;padding:14px 18px;font-weight:950;cursor:pointer;
+      transition:transform .02s ease, background .15s, color .15s, box-shadow .15s;outline:0;
+      letter-spacing:.2px;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{background:var(--mint);color:#fff;box-shadow:0 8px 20px rgba(43,183,168,.25)}
+    .btn.primary:hover{background:#23a99b}
+    .btn.secondary{background:#f0f8f7;color:#13524b;border:2px solid #bfece6}
+    .btn.small{padding:10px 12px;font-size:13px}
+    .btn.link{background:transparent;color:#17655c;text-decoration:underline;padding:6px 0;border-radius:6px;font-weight:900}
 
-.footer-nav{
-  position:fixed;left:0;right:0;bottom:0;background:#fbfffe;border-top:1px solid #d9ece9;
-  display:flex;gap:10px;justify-content:space-between;padding:12px 16px;z-index:20;
-}
-.footer-nav .left,.footer-nav .right{display:flex;gap:10px}
+    .footer-nav{
+      position:fixed;left:0;right:0;bottom:0;background:#fbfffe;border-top:1px solid #d9ece9;
+      display:flex;gap:10px;justify-content:space-between;padding:12px 14px;z-index:50;
+      min-height: var(--footerH);
+      box-shadow:0 -10px 24px rgba(0,0,0,.05);
+    }
+    .footer-nav .left,.footer-nav .right{display:flex;gap:10px;align-items:center}
+    .footer-nav .left{min-width:110px}
+    .footer-nav .right{justify-content:flex-end;flex:1}
+    .footer-nav button{min-width:110px}
 
-.grid-desktop{display:grid;grid-template-columns:1fr;gap:16px}
-@media(min-width:1024px){
-  .wrap{grid-template-columns:minmax(0,760px) 1fr}
-  .sidebar{position:sticky;top:12px;align-self:start}
-  .footer-nav{position:static;background:transparent;border:0;padding:0}
-}
+    .grid-desktop{display:grid;grid-template-columns:1fr;gap:16px}
+    @media(min-width:1024px){
+      .wrap{grid-template-columns:minmax(0,760px) 1fr}
+      .sidebar{position:sticky;top:12px;align-self:start}
+      body{padding-bottom: calc(var(--footerH) + 26px);}
+    }
 
-.totals-head{display:flex;justify-content:space-between;align-items:center}
-.toggle{background:#e9faf7;border:1px solid #bfece6;color:#0e4b45;border-radius:8px;padding:6px 10px;font-weight:900;cursor:pointer}
-.totals-body{margin-top:10px}
-.totals-grid{display:grid;grid-template-columns:1fr auto;gap:8px;font-size:14px}
-.kpi{font-weight:900}
+    .totals-head{display:flex;justify-content:space-between;align-items:center}
+    .toggle{background:#e9faf7;border:1px solid #bfece6;color:#0e4b45;border-radius:10px;padding:8px 10px;font-weight:950;cursor:pointer}
+    .totals-body{margin-top:10px}
+    .totals-grid{display:grid;grid-template-columns:1fr auto;gap:8px;font-size:14px}
+    .kpi{font-weight:950}
 
-.drawer{display:block}
-@media(max-width:1023px){
-  .drawer.collapsed .totals-body{display:none}
-}
+    .drawer{display:block}
+    @media(max-width:1023px){
+      .drawer.collapsed .totals-body{display:none}
+    }
 
-.section{border:1px solid #e6eff1;border-radius:12px;padding:12px}
-.section-title{margin:0 0 8px;font-size:15px;color:#21484d;font-weight:900}
-.stack{display:flex;flex-direction:column;gap:14px}
+    .section{border:1px solid #e6eff1;border-radius:14px;padding:12px}
+    .section-title{margin:0 0 8px;font-size:15px;color:#21484d;font-weight:950}
+    .stack{display:flex;flex-direction:column;gap:14px}
 
-.w2-row{border:1px solid #e6eff1;border-radius:12px;padding:12px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-@media(max-width:720px){
-  .grid2,.grid3{grid-template-columns:1fr}
-}
+    .w2-row{border:1px solid #e6eff1;border-radius:14px;padding:12px;background:#ffffff}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    @media(max-width:720px){
+      .grid2,.grid3{grid-template-columns:1fr}
+    }
 
-.chip{display:inline-block;background:#e7faf7;border:1px solid #bfece6;border-radius:999px;padding:4px 10px;font-size:12px;color:#0d4f48;margin-right:6px}
-canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eeee}
-.space-between{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.mt8{margin-top:8px}
-.mt12{margin-top:12px}
-.mb0{margin-bottom:0}
-```
+    .chip{display:inline-block;background:#e7faf7;border:1px solid #bfece6;border-radius:999px;padding:4px 10px;font-size:12px;color:#0d4f48;margin-right:6px;font-weight:900}
+    canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eeee}
+    .space-between{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .mt8{margin-top:8px}
+    .mt12{margin-top:12px}
+    .mb0{margin-bottom:0}
+    .big-cta{width:100%;padding:16px 18px;font-size:16px}
 
+    .mini-q{
+      display:flex;flex-direction:column;gap:10px;
+      padding:12px;border-radius:14px;border:1px solid #e6eff1;background:#fbfffe;
+    }
+    .mini-q b{color:#21484d}
+
+    /* ✅ Preview fields: clearly NOT editable + green when filled */
+    .preview-input{
+      background:#f6fbfa !important;
+      border:1px solid #d6e7e4 !important;
+      color:#234 !important;
+      font-weight:950;
+      cursor:default;
+    }
+    .preview-input.filled{
+      background:#e8fbf2 !important;
+      border-color:#2bb7a8 !important;
+      box-shadow:0 0 0 3px rgba(43,183,168,.18);
+    }
   </style>
 </head>
 <body>
@@ -185,9 +214,6 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
   </div>
 
   <script>
-  /* ===========================
-     2025 CONFIG (per your values)
-     =========================== */
   const CONFIG_2025 = {
     stdDeduction: { single:15000, mfj:30000, mfs:15000, hoh:22500, qw:30000 },
     ageAddOn: { single:2000, hoh:2000, mfj:1600, mfs:1600, qw:1600 },
@@ -223,41 +249,34 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
     adjustments: { iraLimit: 7000, studentLoanInterestCap: 2500 }
   };
 
-  /* ===========================
-     STATE & STORAGE
-     =========================== */
-  const LS_KEY = "caretax_estimator_2025_v3";
+  const LS_KEY = "caretax_estimator_2025_v4_interview";
   const defaultState = () => ({
     year: 2025,
-
-    filingStatus: null, // single|mfj|mfs|hoh|qw
+    filingStatus: null,
     ages: { taxpayer:null, spouse:null },
-
+    work: { hasW2Job: null, jobCount: 1 },
+    ui: { enterAdjustments: false },
     w2s: [{
       wages: 0,
       fedWh: 0,
       estimateW2: false,
       est: { payType:"hourly", hourly:0, hoursPerWeek:0, weeks:0, annualSalary:0, calcWages:0 },
       estimateWhIfBlank: true,
-      whEst: { payFreq:"biweekly", claimDeps:"no", depCount:0, extraPerPay:0, estimatedAnnual:0 }
+      whEst: { payFreq:"biweekly", claimDeps:"no", depCount:0, extraPerPay:0, estimatedAnnual:0 },
+      ui: { hasW2Form: null, knowsBox2: null, wantsEstBox2: null }
     }],
-
     adjustments: { iraDeduction:0, studentLoanInterest:0 },
-
     interview: {
-      hasDependents: null, // yes|no
-      kidsHaveSSN: null,   // yes|no (only if hasDependents yes)
+      hasDependents: null,
+      kidsHaveSSN: null,
       livedHalfCount: 0,
       under17Count: 0,
       eitcChildren: 0,
-
       investmentIncome: 0,
-
-      paidTuition: null, // yes|no
+      paidTuition: null,
       studentCount: 0,
       students: [{ tuitionNet:0, yearsClaimed:0, halfTime:true, felony:false }]
     },
-
     stepPlan: [],
     currentStepIndex: 0
   });
@@ -294,9 +313,6 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
     return out;
   }
 
-  /* ===========================
-     HELPERS
-     =========================== */
   const $ = (sel, root=document) => root.querySelector(sel);
   const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
   function clamp(n,min,max){ return Math.max(min, Math.min(max,n)); }
@@ -306,28 +322,20 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
     return {single:"Single", mfj:"Married Filing Jointly", mfs:"Married Filing Separately", hoh:"Head of Household", qw:"Qualifying Widow(er)"}[code] || "—";
   }
 
-  function sumWages(){
-    return (state.w2s||[]).reduce((a,w)=>a + (+effectiveWages(w)||0), 0);
-  }
-  function sumWithholding(){
-    return (state.w2s||[]).reduce((a,w)=>a + (+effectiveWithholding(w)||0), 0);
-  }
+  function sumWages(){ return (state.w2s||[]).reduce((a,w)=>a + (+effectiveWages(w)||0), 0); }
+  function sumWithholding(){ return (state.w2s||[]).reduce((a,w)=>a + (+effectiveWithholding(w)||0), 0); }
 
   function effectiveWages(w){
     if(!w) return 0;
     const direct = +w.wages||0;
     if(direct>0) return direct;
-    if(w.estimateW2){
-      return +w.est.calcWages||0;
-    }
+    if(w.estimateW2){ return +w.est.calcWages||0; }
     return 0;
   }
-
   function effectiveWithholding(w){
     if(!w) return 0;
     const box2 = +w.fedWh||0;
     if(box2>0) return box2;
-    // if blank, only estimate if toggle ON and we have estimatedAnnual computed
     if(w.estimateWhIfBlank && (+w.whEst.estimatedAnnual||0) > 0){
       return +w.whEst.estimatedAnnual||0;
     }
@@ -337,13 +345,10 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
   function calcStandardDeduction(){
     const status = state.filingStatus || "single";
     const base = CONFIG_2025.stdDeduction[status] || 0;
-
     const t65 = +state.ages.taxpayer>=65;
     const s65 = (status==="mfj") ? (+state.ages.spouse>=65) : false;
-
     const addPer = CONFIG_2025.ageAddOn[status] || CONFIG_2025.ageAddOn.single || 0;
     const add = (t65?addPer:0) + (s65?addPer:0);
-
     return base + add;
   }
 
@@ -370,8 +375,6 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
 
   function calcCTC({MAGI, filingStatus, eligibleUnder17, earnedIncome, taxBeforeCredits}){
     const cfg = CONFIG_2025.ctc;
-
-    // if they say no SSNs, treat as 0 CTC for this rough estimator
     const ssnOk = state.interview.kidsHaveSSN === "yes";
     if(!ssnOk) return { nonrefundable:0, refundable:0 };
 
@@ -382,8 +385,8 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
     const afterPhase = Math.max(0, baseCredit - phaseout);
 
     const nonref = Math.min(afterPhase, taxBeforeCredits);
-
     const remaining = Math.max(0, afterPhase - nonref);
+
     const earnedExcess = Math.max(0,(earnedIncome||0) - cfg.earnedIncomeThreshold);
     const actcMaxByIncome = Math.round(earnedExcess * 0.15);
     const actcCap = (eligibleUnder17||0) * cfg.refundableCapPerChild;
@@ -469,12 +472,6 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
     return { taxAfterNonref, refundableTotal };
   }
 
-  /* ===========================
-     WITHHOLDING ESTIMATOR (ROUGH)
-     - If Box 2 blank and toggle ON, estimate annual withholding
-     - Uses taxable income (wages - std deduction) and tax brackets
-     - Optionally reduces tax a bit for W-4 dependents (rough)
-     =========================== */
   const PAY_PERIODS = { weekly:52, biweekly:26, semimonthly:24, monthly:12 };
 
   function estimateAnnualWithholdingForW2(w){
@@ -486,9 +483,6 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
     const taxable = Math.max(0, wages - stdDed);
     let tax = calcTax(taxable, status);
 
-    // Rough W-4 dependent effect: allow user to enter dep count (optional),
-    // reduce tax by $500 per dependent annually as a conservative roughness.
-    // If dep count is blank but they said "yes", assume 1.
     const claimDeps = (w.whEst.claimDeps||"no") === "yes";
     let depCount = claimDeps ? (+w.whEst.depCount||0) : 0;
     if(claimDeps && depCount<=0) depCount = 1;
@@ -517,7 +511,6 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
     const earnedIncome = wages;
     const MAGI = AGI;
 
-    // CTC page is only shown if hasDependents yes, but still safe:
     const ctc = (state.interview.hasDependents==="yes" && (+state.interview.under17Count||0)>0)
       ? calcCTC({
           MAGI,
@@ -567,46 +560,25 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
     };
   }
 
-  /* ===========================
-     STEP PLAN (dynamic)
-     =========================== */
   function rebuildStepPlan(){
     const p = ["welcome","status","w2","adjustments"];
-
-    // Kids / CTC page only if hasDependents == yes
-    if(state.interview.hasDependents === "yes"){
-      p.push("kids");
-    }
-
-    // EITC always its own page (still can be 0)
+    if(state.interview.hasDependents === "yes"){ p.push("kids"); }
     p.push("eitc");
-
-    // AOTC page only if paidTuition == yes
-    if(state.interview.paidTuition === "yes"){
-      p.push("aotc");
-    }
-
+    if(state.interview.paidTuition === "yes"){ p.push("aotc"); }
     p.push("results");
 
     state.stepPlan = p;
-
-    // keep index valid
     if(state.currentStepIndex >= p.length) state.currentStepIndex = p.length - 1;
     if(state.currentStepIndex < 0) state.currentStepIndex = 0;
   }
   function currentStep(){ return state.stepPlan[state.currentStepIndex] || "welcome"; }
 
-  /* ===========================
-     VALIDATION
-     =========================== */
   function validate(step){
     const errs = [];
     const s = state;
 
     switch(step){
-      case "welcome":
-        break;
-
+      case "welcome": break;
       case "status":
         if(!s.filingStatus) errs.push("Choose a filing status.");
         if(s.ages.taxpayer===null || isNaN(+s.ages.taxpayer) || +s.ages.taxpayer<0 || +s.ages.taxpayer>120) errs.push("Enter a valid taxpayer age.");
@@ -616,26 +588,45 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
         break;
 
       case "w2":
-        if(!s.w2s.length) errs.push("Add at least one W-2.");
-        s.w2s.forEach((w,i)=>{
-          const wages = +effectiveWages(w)||0;
-          const box1raw = +w.wages||0;
-          const estOn = !!w.estimateW2;
-          if(!estOn && (isNaN(box1raw) || box1raw<0)) errs.push(`W-2 #${i+1}: wages must be ≥ 0`);
-          if(estOn && wages<=0) errs.push(`W-2 #${i+1}: click “Calculate wages” (or enter Box 1).`);
+        if(!["yes","no"].includes(s.work.hasW2Job)) errs.push("Please answer: Did you work a W-2 job?");
+        if(s.work.hasW2Job==="yes"){
+          if(!isFinite(+s.work.jobCount) || +s.work.jobCount<1) errs.push("Select how many W-2 jobs you have (at least 1).");
+          if(!s.w2s.length) errs.push("Add at least one W-2.");
+          s.w2s.forEach((w,i)=>{
+            const hasForm = w.ui?.hasW2Form;
+            if(hasForm===null) errs.push(`W-2 #${i+1}: Please answer if you have the W-2 form.`);
 
-          const box2raw = +w.fedWh||0;
-          if(isNaN(box2raw) || box2raw<0) errs.push(`W-2 #${i+1}: federal withheld must be ≥ 0`);
-        });
+            const wages = +effectiveWages(w)||0;
+            if(hasForm==="yes"){
+              const box1raw = +w.wages||0;
+              if(isNaN(box1raw) || box1raw<0) errs.push(`W-2 #${i+1}: wages must be ≥ 0`);
+              if(box1raw<=0) errs.push(`W-2 #${i+1}: Enter W-2 Box 1 wages (or switch to “No” and estimate).`);
+            } else if(hasForm==="no"){
+              if(!w.estimateW2) errs.push(`W-2 #${i+1}: Wage estimate must be ON if you don’t have the W-2.`);
+              if(wages<=0) errs.push(`W-2 #${i+1}: Enter your estimate (hourly/salary) then it will calculate live.`);
+            }
+
+            const knowsBox2 = w.ui?.knowsBox2;
+            if(knowsBox2===null) errs.push(`W-2 #${i+1}: Please answer if you know Box 2 (federal withheld).`);
+            if(knowsBox2==="yes"){
+              const box2raw = +w.fedWh||0;
+              if(isNaN(box2raw) || box2raw<0) errs.push(`W-2 #${i+1}: federal withheld must be ≥ 0`);
+            } else if(knowsBox2==="no"){
+              const wantsEst = w.ui?.wantsEstBox2;
+              if(wantsEst===null) errs.push(`W-2 #${i+1}: Please answer if you want us to estimate Box 2.`);
+            }
+          });
+        }
         break;
 
       case "adjustments":
         if(+s.adjustments.iraDeduction<0) errs.push("IRA deduction cannot be negative.");
         if(+s.adjustments.studentLoanInterest<0) errs.push("Student loan interest cannot be negative.");
+        if(s.interview.hasDependents !== "yes" && s.interview.hasDependents !== "no") errs.push("Please answer the dependents question.");
+        if(s.interview.paidTuition !== "yes" && s.interview.paidTuition !== "no") errs.push("Please answer the tuition question.");
         break;
 
       case "kids":
-        if(s.interview.hasDependents !== "yes" && s.interview.hasDependents !== "no") errs.push("Please answer the dependents question.");
         if(s.interview.hasDependents === "yes"){
           if(!["yes","no"].includes(s.interview.kidsHaveSSN)) errs.push("Please answer whether the children you claim have SSNs.");
           if(+s.interview.livedHalfCount<0) errs.push("Dependents count can’t be negative.");
@@ -650,7 +641,6 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
         break;
 
       case "aotc":
-        if(s.interview.paidTuition !== "yes" && s.interview.paidTuition !== "no") errs.push("Please answer the tuition question.");
         if(s.interview.paidTuition === "yes"){
           const sc = clamp(+s.interview.studentCount||0, 0, 3);
           if(sc<=0) errs.push("Select the number of students (1–3).");
@@ -663,45 +653,10 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
         }
         break;
 
-      case "results":
-        break;
+      case "results": break;
     }
     return errs;
   }
-
-  /* ===========================
-     NAVIGATION
-     =========================== */
-  function goNext(){
-    const step = currentStep();
-    const errs = validate(step);
-    if(errs.length){ showErrors(errs); return; }
-
-    // rebuild plan when answers change
-    if(step==="status" || step==="w2" || step==="kids" || step==="eitc"){
-      rebuildStepPlan();
-    }
-
-    if(state.currentStepIndex < state.stepPlan.length-1){
-      state.currentStepIndex++;
-      saveState();
-      render();
-    }
-  }
-  function goBack(){
-    if(state.currentStepIndex>0){
-      state.currentStepIndex--;
-      saveState();
-      render();
-    }
-  }
-
-  /* ===========================
-     UI
-     =========================== */
-  const mainCol = document.getElementById('mainCol');
-  const stepText = document.getElementById('stepText');
-  const progressBar = document.getElementById('progressBar');
 
   function showErrors(list){
     const area = $("#errorArea");
@@ -723,6 +678,127 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
     ref[parts[parts.length-1]] = value;
   }
 
+  function ensureW2Count(n){
+    n = clamp(+n||1, 1, 8);
+    state.work.jobCount = n;
+
+    while(state.w2s.length < n){
+      state.w2s.push({
+        wages:0, fedWh:0, estimateW2:false,
+        est:{ payType:"hourly", hourly:0, hoursPerWeek:0, weeks:0, annualSalary:0, calcWages:0 },
+        estimateWhIfBlank:true,
+        whEst:{ payFreq:"biweekly", claimDeps:"no", depCount:0, extraPerPay:0, estimatedAnnual:0 },
+        ui:{ hasW2Form:null, knowsBox2:null, wantsEstBox2:null }
+      });
+    }
+    if(state.w2s.length > n){
+      state.w2s = state.w2s.slice(0,n);
+    }
+  }
+
+  function normalizeInterviewFlags(){
+    state.w2s.forEach(w=>{
+      if(!w.ui) w.ui = {hasW2Form:null, knowsBox2:null, wantsEstBox2:null};
+
+      if(w.ui.hasW2Form==="yes"){
+        w.estimateW2 = false;
+        w.est.calcWages = w.est.calcWages || 0;
+      }
+      if(w.ui.hasW2Form==="no"){
+        w.estimateW2 = true;
+        if(+w.wages>0) w.wages = 0;
+      }
+
+      if(w.ui.knowsBox2==="yes"){
+        w.estimateWhIfBlank = false;
+        w.whEst.estimatedAnnual = 0;
+        w.ui.wantsEstBox2 = null;
+      }
+      if(w.ui.knowsBox2==="no"){
+        if(+w.fedWh>0) w.fedWh = 0;
+        if(w.ui.wantsEstBox2==="yes"){
+          w.estimateWhIfBlank = true;
+        } else if(w.ui.wantsEstBox2==="no"){
+          w.estimateWhIfBlank = false;
+          w.whEst.estimatedAnnual = 0;
+        }
+      }
+    });
+  }
+
+  /* ✅ LIVE preview helpers */
+  function paintPreview(el, value){
+    if(!el) return;
+    const v = Math.max(0, +value||0);
+    el.value = fmtMoney(v);
+    el.classList.toggle("filled", v > 0);
+  }
+
+  function recalcLiveW2(i){
+    const w = state.w2s[i];
+    if(!w) return;
+
+    if(w.estimateW2){
+      let estW = 0;
+      if(w.est.payType==="hourly"){
+        const hr = Math.max(0, +w.est.hourly||0);
+        const hpw = Math.max(0, +w.est.hoursPerWeek||0);
+        const weeks = Math.max(0, +w.est.weeks||0);
+        estW = hr * hpw * weeks;
+      }else{
+        estW = Math.max(0, +w.est.annualSalary||0);
+      }
+      w.est.calcWages = Math.round(estW);
+    }
+
+    // Update previews (no render)
+    paintPreview(document.getElementById("wagePreview_"+i), effectiveWages(w));
+    paintPreview(document.getElementById("estWagePreview_"+i), w.est.calcWages);
+
+    // If withholding estimator is enabled, keep Box2 preview in sync too
+    if(w.estimateWhIfBlank){
+      paintPreview(document.getElementById("box2Preview_"+i), +w.whEst.estimatedAnnual||0);
+    }
+  }
+
+  function maybeAutoEstimateBox2(i){
+    const w = state.w2s[i];
+    if(!w) return;
+    if(!w.estimateWhIfBlank) return;
+
+    w.whEst.estimatedAnnual = estimateAnnualWithholdingForW2(w);
+    paintPreview(document.getElementById("box2Preview_"+i), w.whEst.estimatedAnnual);
+  }
+
+  function goNext(){
+    const step = currentStep();
+    const errs = validate(step);
+    if(errs.length){ showErrors(errs); return; }
+
+    if(step==="status" || step==="w2" || step==="kids" || step==="eitc" || step==="adjustments"){
+      rebuildStepPlan();
+    }
+
+    if(state.currentStepIndex < state.stepPlan.length-1){
+      state.currentStepIndex++;
+      saveState();
+      render();
+      window.scrollTo({top:0,behavior:"smooth"}); /* ✅ only on step change */
+    }
+  }
+  function goBack(){
+    if(state.currentStepIndex>0){
+      state.currentStepIndex--;
+      saveState();
+      render();
+      window.scrollTo({top:0,behavior:"smooth"}); /* ✅ only on step change */
+    }
+  }
+
+  const mainCol = document.getElementById('mainCol');
+  const stepText = document.getElementById('stepText');
+  const progressBar = document.getElementById('progressBar');
+
   function render(){
     rebuildStepPlan();
 
@@ -736,7 +812,7 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
     $("#backBtn").disabled = state.currentStepIndex===0;
     $("#topBackBtn").disabled = state.currentStepIndex===0;
 
-    $("#nextBtn").style.display = (step==="results") ? "none" : "inline-block";
+    $("#nextBtn").style.display = (step==="results") ? "none" : "inline-flex";
     $("#backBtn").style.visibility = (step==="results") ? "hidden" : "visible";
     $("#topBackBtn").style.visibility = (step==="results") ? "hidden" : "visible";
 
@@ -749,7 +825,7 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
     attachHandlers(card);
     updateTotals();
 
-    window.scrollTo({top:0,behavior:"smooth"});
+    // ✅ DO NOT auto-scroll here anymore (prevents jumps while estimating)
   }
 
   function attachHandlers(scope){
@@ -764,6 +840,20 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
         setByPath(state, el.dataset.bind, isFinite(num)?num:0);
         saveState();
         updateTotals();
+
+        // ✅ live wage preview when typing Box 1 or salary/extra withholding
+        const m = String(el.dataset.bind||"").match(/^w2s\.(\d+)\./);
+        if(m){
+          const i = +m[1];
+          recalcLiveW2(i);
+
+          // if they typed extra withholding, update Box2 estimate live (but only if estimator is on)
+          if(String(el.dataset.bind||"").includes(".whEst.extraPerPay")){
+            maybeAutoEstimateBox2(i);
+            saveState();
+            updateTotals();
+          }
+        }
       });
     });
 
@@ -775,16 +865,38 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
         setByPath(state, el.dataset.bind, v);
         saveState();
         updateTotals();
+
+        // ✅ live wage preview when typing hourly inputs
+        const m = String(el.dataset.bind||"").match(/^w2s\.(\d+)\./);
+        if(m){
+          const i = +m[1];
+          recalcLiveW2(i);
+          // if dep count changed and estimator is on, keep Box2 estimate in sync
+          if(String(el.dataset.bind||"").includes(".whEst.depCount")){
+            maybeAutoEstimateBox2(i);
+          }
+        }
       });
     });
 
     $$('select, input[type="radio"], input[type="checkbox"]', scope).forEach(el=>{
       el.addEventListener('change', ()=>{
+        // ✅ special-case pay frequency: compute estimate immediately + NO render + NO scroll jump
+        const bind = String(el.dataset.bind||"");
+        const payFreqMatch = bind.match(/^w2s\.(\d+)\.whEst\.payFreq$/);
+        if(payFreqMatch){
+          const i = +payFreqMatch[1];
+          setByPath(state, bind, el.value);
+          maybeAutoEstimateBox2(i);
+          saveState();
+          updateTotals();
+          return; // ✅ stop here: no rebuild/render
+        }
+
         if(el.type==="checkbox") setByPath(state, el.dataset.bind, el.checked);
         else if(el.type==="radio") setByPath(state, el.dataset.bind, el.value);
         else setByPath(state, el.dataset.bind, el.value);
 
-        // dynamic student count
         if(el.id==="studentCountSel"){
           const n = clamp(+el.value||0, 0, 3);
           state.interview.studentCount = n;
@@ -792,7 +904,42 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
           if(state.interview.students.length > n) state.interview.students = state.interview.students.slice(0,n);
         }
 
-        // if user says no dependents, reset kid-only fields
+        if(el.id==="jobCountSel"){
+          ensureW2Count(+el.value||1);
+        }
+
+        if(el.dataset.bind==="work.hasW2Job"){
+          if(el.value==="no"){
+            state.work.jobCount = 1;
+            state.w2s = [state.w2s[0] || {
+              wages:0, fedWh:0, estimateW2:false,
+              est:{ payType:"hourly", hourly:0, hoursPerWeek:0, weeks:0, annualSalary:0, calcWages:0 },
+              estimateWhIfBlank:true,
+              whEst:{ payFreq:"biweekly", claimDeps:"no", depCount:0, extraPerPay:0, estimatedAnnual:0 },
+              ui:{ hasW2Form:null, knowsBox2:null, wantsEstBox2:null }
+            }];
+            state.w2s[0].wages = 0;
+            state.w2s[0].fedWh = 0;
+            state.w2s[0].estimateW2 = false;
+            state.w2s[0].est.calcWages = 0;
+            state.w2s[0].estimateWhIfBlank = false;
+            state.w2s[0].whEst.estimatedAnnual = 0;
+            state.w2s[0].ui = {hasW2Form:null, knowsBox2:null, wantsEstBox2:null};
+          } else {
+            if(!state.work.jobCount) state.work.jobCount = 1;
+            ensureW2Count(state.work.jobCount);
+          }
+        }
+
+        if(el.dataset.bind==="ui.enterAdjustments"){
+          // radio returns "true"/"false" strings -> normalize to boolean
+          state.ui.enterAdjustments = (String(el.value) === "true");
+          if(!state.ui.enterAdjustments){
+            state.adjustments.iraDeduction = 0;
+            state.adjustments.studentLoanInterest = 0;
+          }
+        }
+
         if(el.dataset.bind==="interview.hasDependents" && el.value==="no"){
           state.interview.kidsHaveSSN = null;
           state.interview.livedHalfCount = 0;
@@ -800,29 +947,13 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
           state.interview.eitcChildren = 0;
         }
 
-        // if user toggles tuition no, reset
         if(el.dataset.bind==="interview.paidTuition" && el.value==="no"){
           state.interview.studentCount = 0;
           state.interview.students = [{tuitionNet:0,yearsClaimed:0,halfTime:true,felony:false}];
         }
 
-        // W-2 toggle behaviors:
-        if(el.classList.contains("w2EstimateToggle")){
-          const idx = +el.dataset.idx;
-          if(state.w2s[idx]){
-            if(!state.w2s[idx].estimateW2){
-              state.w2s[idx].est.calcWages = 0;
-            }
-          }
-        }
-
-        if(el.classList.contains("w2WhEstimateToggle")){
-          const idx = +el.dataset.idx;
-          if(state.w2s[idx]){
-            if(!state.w2s[idx].estimateWhIfBlank){
-              state.w2s[idx].whEst.estimatedAnnual = 0;
-            }
-          }
+        if(String(el.dataset.bind||"").includes("w2s.") && String(el.dataset.bind||"").includes(".ui.")){
+          normalizeInterviewFlags();
         }
 
         rebuildStepPlan();
@@ -838,8 +969,10 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
           wages:0, fedWh:0, estimateW2:false,
           est:{ payType:"hourly", hourly:0, hoursPerWeek:0, weeks:0, annualSalary:0, calcWages:0 },
           estimateWhIfBlank:true,
-          whEst:{ payFreq:"biweekly", claimDeps:"no", depCount:0, extraPerPay:0, estimatedAnnual:0 }
+          whEst:{ payFreq:"biweekly", claimDeps:"no", depCount:0, extraPerPay:0, estimatedAnnual:0 },
+          ui:{ hasW2Form:null, knowsBox2:null, wantsEstBox2:null }
         });
+        state.work.jobCount = state.w2s.length;
         saveState();
         render();
       };
@@ -854,9 +987,11 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
             wages:0, fedWh:0, estimateW2:false,
             est:{ payType:"hourly", hourly:0, hoursPerWeek:0, weeks:0, annualSalary:0, calcWages:0 },
             estimateWhIfBlank:true,
-            whEst:{ payFreq:"biweekly", claimDeps:"no", depCount:0, extraPerPay:0, estimatedAnnual:0 }
+            whEst:{ payFreq:"biweekly", claimDeps:"no", depCount:0, extraPerPay:0, estimatedAnnual:0 },
+            ui:{ hasW2Form:null, knowsBox2:null, wantsEstBox2:null }
           }];
         }
+        state.work.jobCount = state.w2s.length;
         saveState();
         render();
       };
@@ -865,22 +1000,9 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
     $$(".calcWagesBtn", scope).forEach(btn=>{
       btn.onclick = ()=>{
         const idx = +btn.dataset.idx;
-        const w = state.w2s[idx];
-        if(!w) return;
-
-        let estW = 0;
-        if(w.est.payType==="hourly"){
-          const hr = Math.max(0, +w.est.hourly||0);
-          const hpw = Math.max(0, +w.est.hoursPerWeek||0);
-          const weeks = Math.max(0, +w.est.weeks||0);
-          estW = hr * hpw * weeks;
-        } else {
-          estW = Math.max(0, +w.est.annualSalary||0);
-        }
-        w.est.calcWages = Math.round(estW);
-        // if Box 1 is blank/0, keep it 0 but totals will use calcWages
+        recalcLiveW2(idx);
         saveState();
-        render();
+        updateTotals();
       };
     });
 
@@ -889,10 +1011,10 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
         const idx = +btn.dataset.idx;
         const w = state.w2s[idx];
         if(!w) return;
-
         w.whEst.estimatedAnnual = estimateAnnualWithholdingForW2(w);
+        paintPreview(document.getElementById("box2Preview_"+idx), w.whEst.estimatedAnnual);
         saveState();
-        render();
+        updateTotals();
       };
     });
 
@@ -909,6 +1031,11 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
     const resetInline = $("[data-action='reset']", scope);
     if(resetInline){
       resetInline.onclick = (e)=>{ e.preventDefault(); resetState(); };
+    }
+
+    const startBtn = $("#startBtn", scope);
+    if(startBtn){
+      startBtn.onclick = (e)=>{ e.preventDefault(); goNext(); };
     }
   }
 
@@ -942,17 +1069,26 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
           <div class="section mt12" style="background:#eefcf9;border-color:#bfece6">
             <div class="section-title">W-2 Filing Special — Only $89</div>
             <div class="help" style="font-size:13px;color:#1b5b54">
-              Click <b>Next</b> to get started →
+              We can file your W-2 return for just $89.
+            </div>
+          </div>
+
+          <div class="section mt12">
+            <div class="section-title">What you’ll need (if you have it)</div>
+            <div class="mini-q">
+              <div>✅ Your <b>W-2 Box 1</b> (wages)</div>
+              <div>✅ Your <b>W-2 Box 2</b> (federal withheld)</div>
+              <div>✅ If you don’t have it, it’s okay — we can <b>estimate</b>.</div>
             </div>
           </div>
 
           <div class="info mt12">
             <b>2025 only.</b> W-2 jobs only. Federal estimate only. Not tax advice.
-            <div class="help mt8">You can add multiple W-2s. If you don’t have your W-2, use “Estimate my W-2” and we’ll still give a rough result.</div>
+            <div class="help mt8">This is a rough estimate. Exact refund depends on eligibility rules and exact withholding.</div>
           </div>
 
-          <div class="info mt12">
-            <b>Important:</b> This is a rough estimate. Exact refund depends on full eligibility rules, exact withholding (W-2 Box 2), and other income/credits not included.
+          <div class="mt12">
+            <button class="btn primary big-cta" id="startBtn" type="button">Start</button>
           </div>
 
           <div id="errorArea" class="mt12" tabindex="-1" aria-live="polite"></div>
@@ -960,20 +1096,21 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
 
       case "status":
         return `
-          <h3 class="title">Filing Status & Ages</h3>
+          <h3 class="title">How do you usually file?</h3>
+          <div class="info">Pick the option you usually file. Then enter your age.</div>
 
-          <div class="row">
+          <div class="row mt12">
             <div class="radio-group" role="radiogroup" aria-label="Filing Status">
               ${["single","mfj","mfs","hoh","qw"].map(code=>{
                 return `
                 <label class="radio-option">
                   <input type="radio" data-bind="filingStatus" value="${code}" ${state.filingStatus===code?'checked':''}>
-                  <span>${labelFS(code)}</span>
+                  <span><b>${labelFS(code)}</b></span>
                 </label>`;
               }).join("")}
             </div>
 
-            <div class="grid2">
+            <div class="grid2 mt12">
               <div>
                 <label>Taxpayer age</label>
                 <input type="number" min="0" max="120" data-bind="ages.taxpayer" value="${state.ages.taxpayer??''}">
@@ -996,113 +1133,196 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
         `;
 
       case "w2":
-        return `
-          <h3 class="title">W-2 Income (Add each job)</h3>
+        const hasJob = state.work.hasW2Job;
+        const showJobs = hasJob==="yes";
+        const jobCount = clamp(+state.work.jobCount||1, 1, 8);
 
-          <div class="info">
-            Enter Box 1 wages and Box 2 federal withholding if you have them.
-            <div class="help mt8">If you don’t have your W-2, turn on “Estimate my W-2” for that job.</div>
+        return `
+          <h3 class="title">Work & W-2 (Simple Interview)</h3>
+
+          <div class="section">
+            <div class="section-title">Question 1</div>
+            <label>Did you work a job where you will get a W-2?</label>
+            <div class="radio-group mt8">
+              <label class="radio-option">
+                <input type="radio" data-bind="work.hasW2Job" value="yes" ${hasJob==="yes"?'checked':''}>
+                <span><b>Yes</b> (I worked a W-2 job)</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" data-bind="work.hasW2Job" value="no" ${hasJob==="no"?'checked':''}>
+                <span><b>No</b></span>
+              </label>
+            </div>
+            <div class="help mt8">This estimator is for W-2 only. If you select “No”, we’ll continue with $0 wages (so it won’t crash).</div>
           </div>
 
-          <div class="stack mt12">
-            ${(state.w2s||[]).map((w,idx)=>{
-              const showWageEstimator = !!w.estimateW2;
-              const showWhEstimatorUI = ( (+w.fedWh||0) <= 0 ) && !!w.estimateWhIfBlank;
+          ${showJobs ? `
+            <div class="section mt12">
+              <div class="section-title">Question 2</div>
+              <label>How many W-2 jobs do you have?</label>
+              <select id="jobCountSel" data-bind="work.jobCount" class="mt8">
+                ${[1,2,3,4,5].map(n=>`<option value="${n}" ${jobCount===n?'selected':''}>${n}</option>`).join("")}
+              </select>
+              <div class="help mt8">We will show one section for each job.</div>
+            </div>
 
-              const calcPreview = Math.max(0, +w.est.calcWages||0);
-              const whPreview = Math.max(0, +w.whEst.estimatedAnnual||0);
+            <div class="info mt12">
+              Tip: If you don’t have your W-2, choose “No” and estimate your wages.
+            </div>
 
-              return `
-                <div class="w2-row">
-                  <div class="space-between">
-                    <div style="font-weight:900;color:#21484d">W-2 #${idx+1}</div>
-                    <button class="btn small secondary removeW2" data-idx="${idx}" type="button">Remove</button>
-                  </div>
+            <div class="stack mt12">
+              ${(state.w2s||[]).slice(0, jobCount).map((w,idx)=>{
+                const ui = w.ui || {hasW2Form:null, knowsBox2:null, wantsEstBox2:null};
+                const calcPreview = Math.max(0, +w.est.calcWages||0);
+                const whPreview = Math.max(0, +w.whEst.estimatedAnnual||0);
 
-                  <div class="grid3 mt12">
-                    <div>
-                      <label>Wages (W-2 Box 1)</label>
-                      <input class="money" data-money="1" data-bind="w2s.${idx}.wages" value="${(+w.wages?Number(w.wages).toLocaleString(): '')}" inputmode="numeric" placeholder="Leave blank if estimating">
-                      <div class="help">If blank and “Estimate my W-2” is on, we’ll use your estimate.</div>
+                const hasForm = ui.hasW2Form;
+                const knowsBox2 = ui.knowsBox2;
+                const wantsEst = ui.wantsEstBox2;
+
+                const showBox1Box2 = (hasForm==="yes");
+                const showWageEstimator = (hasForm==="no");
+
+                const showBox2Field = (knowsBox2==="yes");
+                const showAskWantsEst = (knowsBox2==="no");
+                const showWhEstimatorUI = (knowsBox2==="no" && wantsEst==="yes");
+
+                return `
+                  <div class="w2-row">
+                    <div class="space-between">
+                      <div style="font-weight:950;color:#21484d">Job ${idx+1}</div>
+                      <div class="help">Answer the questions → then enter only what you have.</div>
                     </div>
 
-                    <div>
-                      <label>Federal withheld (W-2 Box 2)</label>
-                      <input class="money" data-money="1" data-bind="w2s.${idx}.fedWh" value="${(+w.fedWh?Number(w.fedWh).toLocaleString(): '')}" inputmode="numeric" placeholder="(optional)">
-                      <div class="help">If blank, you can estimate (rough).</div>
-                    </div>
-
-                    <div>
-                      <label style="display:block">Options</label>
-                      <label class="radio-option" style="gap:10px">
-                        <input class="w2EstimateToggle" data-idx="${idx}" type="checkbox" data-bind="w2s.${idx}.estimateW2" ${w.estimateW2?'checked':''}>
-                        <span><b>Estimate my W-2</b> (I don’t have it)</span>
-                      </label>
-
-                      <label class="radio-option mt8" style="gap:10px">
-                        <input class="w2WhEstimateToggle" data-idx="${idx}" type="checkbox" data-bind="w2s.${idx}.estimateWhIfBlank" ${w.estimateWhIfBlank?'checked':''}>
-                        <span><b>Estimate federal withholding</b> if Box 2 is blank</span>
-                      </label>
-
-                      <div class="help mt8">If you typed Box 2, we use it exactly. If Box 2 is blank and estimate is OFF, we treat withholding as $0 for this W-2.</div>
-                    </div>
-                  </div>
-
-                  ${showWageEstimator ? `
                     <div class="section mt12">
-                      <div class="section-title">Estimate wages for W-2 #${idx+1}</div>
-
-                      <div class="grid2">
-                        <div>
-                          <label>Pay type</label>
-                          <select data-bind="w2s.${idx}.est.payType">
-                            <option value="hourly" ${w.est.payType==="hourly"?'selected':''}>Hourly</option>
-                            <option value="salary" ${w.est.payType==="salary"?'selected':''}>Salary</option>
-                          </select>
-                        </div>
-
-                        <div>
-                          <label>Estimated wages (preview)</label>
-                          <input class="money" type="text" value="${fmtMoney(calcPreview)}" readonly>
-                          <div class="help">Starts at $0. Click “Calculate wages” to fill this.</div>
-                        </div>
-                      </div>
-
-                      ${w.est.payType==="hourly" ? `
-                        <div class="grid3 mt12">
-                          <div>
-                            <label>Hourly rate</label>
-                            <input type="number" min="0" step="0.01" data-bind="w2s.${idx}.est.hourly" value="${+w.est.hourly||0}">
-                          </div>
-                          <div>
-                            <label>Hours per week</label>
-                            <input type="number" min="0" step="0.1" data-bind="w2s.${idx}.est.hoursPerWeek" value="${+w.est.hoursPerWeek||0}">
-                          </div>
-                          <div>
-                            <label>Weeks worked (this year)</label>
-                            <input type="number" min="0" step="1" data-bind="w2s.${idx}.est.weeks" value="${+w.est.weeks||0}">
-                          </div>
-                        </div>
-                      ` : `
-                        <div class="mt12">
-                          <label>Annual salary</label>
-                          <input class="money" data-money="1" data-bind="w2s.${idx}.est.annualSalary" value="${(+w.est.annualSalary?Number(w.est.annualSalary).toLocaleString(): '')}">
-                        </div>
-                      `}
-
-                      <div class="mt12">
-                        <button class="btn small primary calcWagesBtn" data-idx="${idx}" type="button">Calculate wages</button>
- 강조
-                        <div class="help mt8">This updates instantly — no going back needed.</div>
+                      <div class="section-title">Question 3</div>
+                      <label>Do you have your W-2 form for this job?</label>
+                      <div class="radio-group mt8">
+                        <label class="radio-option">
+                          <input type="radio" data-bind="w2s.${idx}.ui.hasW2Form" value="yes" ${hasForm==="yes"?'checked':''}>
+                          <span><b>Yes</b></span>
+                        </label>
+                        <label class="radio-option">
+                          <input type="radio" data-bind="w2s.${idx}.ui.hasW2Form" value="no" ${hasForm==="no"?'checked':''}>
+                          <span><b>No</b> (estimate)</span>
+                        </label>
                       </div>
                     </div>
-                  ` : ""}
 
-                  ${(+w.fedWh||0) <= 0 ? `
-                    ${w.estimateWhIfBlank ? `
+                    ${showBox1Box2 ? `
                       <div class="section mt12">
-                        <div class="section-title">Estimate Box 2 (rough) — W-2 #${idx+1}</div>
-                        <div class="help">Used only if Box 2 is blank. This is not exact withholding, just a rough estimate.</div>
+                        <div class="section-title">Enter wages (from your W-2)</div>
+                        <div class="grid2">
+                          <div>
+                            <label>Wages (W-2 Box 1)</label>
+                            <input class="money" data-money="1" data-bind="w2s.${idx}.wages" value="${(+w.wages?Number(w.wages).toLocaleString(): '')}" inputmode="numeric" placeholder="Box 1">
+                            <div class="help">Enter Box 1 from your W-2.</div>
+                          </div>
+                          <div>
+                            <label>Wages preview</label>
+                            <input id="wagePreview_${idx}" class="money preview-input ${effectiveWages(w)>0?'filled':''}" type="text" value="${fmtMoney(effectiveWages(w))}" readonly>
+                            <div class="help">Updates live as you type.</div>
+                          </div>
+                        </div>
+                      </div>
+                    ` : ""}
+
+                    ${showWageEstimator ? `
+                      <div class="section mt12">
+                        <div class="section-title">Estimate wages</div>
+                        <div class="help">If you don’t have the W-2, estimate your wages for the year.</div>
+
+                        <div class="grid2 mt12">
+                          <div>
+                            <label>Pay type</label>
+                            <select data-bind="w2s.${idx}.est.payType">
+                              <option value="hourly" ${w.est.payType==="hourly"?'selected':''}>Hourly</option>
+                              <option value="salary" ${w.est.payType==="salary"?'selected':''}>Salary</option>
+                            </select>
+                          </div>
+
+                          <div>
+                            <label>Estimated wages (preview)</label>
+                            <input id="estWagePreview_${idx}" class="money preview-input ${calcPreview>0?'filled':''}" type="text" value="${fmtMoney(calcPreview)}" readonly>
+                            <div class="help">Updates live as you type.</div>
+                          </div>
+                        </div>
+
+                        ${w.est.payType==="hourly" ? `
+                          <div class="grid3 mt12">
+                            <div>
+                              <label>Hourly rate</label>
+                              <input type="number" min="0" step="0.01" data-bind="w2s.${idx}.est.hourly" value="${+w.est.hourly||0}">
+                            </div>
+                            <div>
+                              <label>Hours per week</label>
+                              <input type="number" min="0" step="0.1" data-bind="w2s.${idx}.est.hoursPerWeek" value="${+w.est.hoursPerWeek||0}">
+                            </div>
+                            <div>
+                              <label>Weeks worked</label>
+                              <input type="number" min="0" step="1" data-bind="w2s.${idx}.est.weeks" value="${+w.est.weeks||0}">
+                            </div>
+                          </div>
+                        ` : `
+                          <div class="mt12">
+                            <label>Annual salary</label>
+                            <input class="money" data-money="1" data-bind="w2s.${idx}.est.annualSalary" value="${(+w.est.annualSalary?Number(w.est.annualSalary).toLocaleString(): '')}">
+                          </div>
+                        `}
+
+                        <div class="mt12">
+                          <button class="btn primary calcWagesBtn" data-idx="${idx}" type="button">Calculate wages</button>
+                          <div class="help mt8">Optional — it already updates live, but this confirms it.</div>
+                        </div>
+                      </div>
+                    ` : ""}
+
+                    <div class="section mt12">
+                      <div class="section-title">Question 4</div>
+                      <label>Do you know your federal withholding (W-2 Box 2) for this job?</label>
+                      <div class="radio-group mt8">
+                        <label class="radio-option">
+                          <input type="radio" data-bind="w2s.${idx}.ui.knowsBox2" value="yes" ${knowsBox2==="yes"?'checked':''}>
+                          <span><b>Yes</b> (I can enter Box 2)</span>
+                        </label>
+                        <label class="radio-option">
+                          <input type="radio" data-bind="w2s.${idx}.ui.knowsBox2" value="no" ${knowsBox2==="no"?'checked':''}>
+                          <span><b>No</b> (I don’t know Box 2)</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    ${showBox2Field ? `
+                      <div class="section mt12">
+                        <div class="section-title">Enter withholding (from your W-2)</div>
+                        <label>Federal withheld (W-2 Box 2)</label>
+                        <input class="money" data-money="1" data-bind="w2s.${idx}.fedWh" value="${(+w.fedWh?Number(w.fedWh).toLocaleString(): '')}" inputmode="numeric" placeholder="Box 2">
+                        <div class="help mt8">If you enter Box 2, we use it exactly.</div>
+                      </div>
+                    ` : ""}
+
+                    ${showAskWantsEst ? `
+                      <div class="section mt12">
+                        <div class="section-title">Question 5</div>
+                        <label>Do you want us to estimate your federal withholding?</label>
+                        <div class="radio-group mt8">
+                          <label class="radio-option">
+                            <input type="radio" data-bind="w2s.${idx}.ui.wantsEstBox2" value="yes" ${wantsEst==="yes"?'checked':''}>
+                            <span><b>Yes</b> (estimate it)</span>
+                          </label>
+                          <label class="radio-option">
+                            <input type="radio" data-bind="w2s.${idx}.ui.wantsEstBox2" value="no" ${wantsEst==="no"?'checked':''}>
+                            <span><b>No</b> (treat as $0)</span>
+                          </label>
+                        </div>
+                        <div class="help mt8">If you choose “No”, this job’s withholding will be treated as $0 for the estimate.</div>
+                      </div>
+                    ` : ""}
+
+                    ${showWhEstimatorUI ? `
+                      <div class="section mt12">
+                        <div class="section-title">Estimate Box 2 (rough)</div>
+                        <div class="help">This auto-updates when you select pay frequency (and also stays live as you tweak inputs).</div>
 
                         <div class="grid2 mt12">
                           <div>
@@ -1113,13 +1333,12 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
                               <option value="semimonthly" ${w.whEst.payFreq==="semimonthly"?'selected':''}>Semi-monthly</option>
                               <option value="monthly" ${w.whEst.payFreq==="monthly"?'selected':''}>Monthly</option>
                             </select>
-                            <div class="help">Helps convert annual tax into per-paycheck withholding (rough).</div>
                           </div>
 
                           <div>
                             <label>Estimated Box 2 (preview)</label>
-                            <input class="money" type="text" value="${fmtMoney(whPreview)}" readonly>
-                            <div class="help">Click “Estimate Box 2” to calculate.</div>
+                            <input id="box2Preview_${idx}" class="money preview-input ${whPreview>0?'filled':''}" type="text" value="${fmtMoney(whPreview)}" readonly>
+                            <div class="help">Turns green when calculated.</div>
                           </div>
                         </div>
 
@@ -1139,63 +1358,89 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
 
                         ${w.whEst.claimDeps==="yes" ? `
                           <div class="mt12">
-                            <label>How many dependents (rough)</label>
+                            <label>How many dependents? (rough)</label>
                             <input type="number" min="0" data-bind="w2s.${idx}.whEst.depCount" value="${+w.whEst.depCount||0}">
-                            <div class="help">If you’re not sure, leave blank (we assume 1 if “Yes”).</div>
+                            <div class="help">If unsure, leave blank (we assume 1 if “Yes”).</div>
                           </div>
                         ` : ""}
 
                         <div class="mt12">
                           <label>Extra withholding per paycheck (optional)</label>
                           <input class="money" data-money="1" data-bind="w2s.${idx}.whEst.extraPerPay" value="${(+w.whEst.extraPerPay?Number(w.whEst.extraPerPay).toLocaleString(): '')}">
-                          <div class="help">If you don’t know, leave $0.</div>
                         </div>
 
                         <div class="mt12">
-                          <button class="btn small primary estimateBox2Btn" data-idx="${idx}" type="button">Estimate Box 2</button>
-                          <div class="help mt8">We calculate and fill Box 2 estimate for this W-2 instantly.</div>
+                          <button class="btn primary estimateBox2Btn" data-idx="${idx}" type="button">Estimate Box 2</button>
                         </div>
                       </div>
-                    ` : `
-                      <div class="info mt12">Box 2 is blank and withholding estimate is OFF. We will treat withholding as $0 for this W-2.</div>
-                    `}
-                  ` : ""}
+                    ` : ""}
 
-                </div>
-              `;
-            }).join("")}
+                    ${(knowsBox2==="no" && wantsEst==="no") ? `
+                      <div class="info mt12">Withholding for this job will be treated as <b>$0</b> for the estimate.</div>
+                    ` : ""}
 
-            <button id="addW2" class="btn primary" type="button" style="width:100%">Add W-2</button>
-          </div>
+                  </div>
+                `;
+              }).join("")}
+
+              <div class="section mt12">
+                <div class="section-title">Optional</div>
+                <div class="help">If you have more jobs than you selected, you can add one.</div>
+                <button id="addW2" class="btn secondary" type="button" style="width:100%">Add another W-2</button>
+              </div>
+            </div>
+          ` : `
+            <div class="info mt12">
+              You selected <b>No</b>. This estimator is for W-2 only — we will continue with $0 wages.
+            </div>
+          `}
 
           <div id="errorArea" class="mt12" tabindex="-1" aria-live="polite"></div>
         `;
 
       case "adjustments":
         return `
-          <h3 class="title">Optional Adjustments (Most people can skip)</h3>
-          <div class="info">
-            If you’re not sure, leave everything at <b>$0</b>. Your estimate will still work for most W-2 situations.
+          <h3 class="title">Optional (Most people can skip)</h3>
+
+          <div class="section">
+            <div class="section-title">Do you want to enter adjustments?</div>
+            <label>Examples: IRA deduction, student loan interest</label>
+            <div class="radio-group mt8">
+              <label class="radio-option">
+                <input type="radio" data-bind="ui.enterAdjustments" value="true" ${state.ui.enterAdjustments===true?'checked':''}>
+                <span><b>Yes</b> (I want to enter them)</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" data-bind="ui.enterAdjustments" value="false" ${state.ui.enterAdjustments!==true?'checked':''}>
+                <span><b>No</b> (skip)</span>
+              </label>
+            </div>
+            <div class="help mt8">If you skip, we keep them at $0.</div>
           </div>
 
-          <div class="section mt12">
-            <div class="grid2">
-              <div>
-                <label>Traditional IRA deduction (optional)</label>
-                <input class="money" data-money="1" data-bind="adjustments.iraDeduction" value="${(+state.adjustments.iraDeduction?Number(state.adjustments.iraDeduction).toLocaleString(): '')}">
-                <div class="help">Max considered: ${fmtMoney(CONFIG_2025.adjustments.iraLimit)}.</div>
-              </div>
-              <div>
-                <label>Student loan interest (optional)</label>
-                <input class="money" data-money="1" data-bind="adjustments.studentLoanInterest" value="${(+state.adjustments.studentLoanInterest?Number(state.adjustments.studentLoanInterest).toLocaleString(): '')}">
-                <div class="help">Max considered: ${fmtMoney(CONFIG_2025.adjustments.studentLoanInterestCap)}.</div>
+          ${state.ui.enterAdjustments===true ? `
+            <div class="section mt12">
+              <div class="grid2">
+                <div>
+                  <label>Traditional IRA deduction (optional)</label>
+                  <input class="money" data-money="1" data-bind="adjustments.iraDeduction" value="${(+state.adjustments.iraDeduction?Number(state.adjustments.iraDeduction).toLocaleString(): '')}">
+                  <div class="help">Max considered: ${fmtMoney(CONFIG_2025.adjustments.iraLimit)}.</div>
+                </div>
+                <div>
+                  <label>Student loan interest (optional)</label>
+                  <input class="money" data-money="1" data-bind="adjustments.studentLoanInterest" value="${(+state.adjustments.studentLoanInterest?Number(state.adjustments.studentLoanInterest).toLocaleString(): '')}">
+                  <div class="help">Max considered: ${fmtMoney(CONFIG_2025.adjustments.studentLoanInterestCap)}.</div>
+                </div>
               </div>
             </div>
-          </div>
+          ` : `
+            <div class="info mt12">Adjustments are skipped (set to $0).</div>
+          `}
 
           <div class="section mt12">
-            <div class="section-title">Quick question (helps us show/hide pages)</div>
-            <label>Do you have children or dependents you claim on your taxes?</label>
+            <div class="section-title">Quick questions (to show the next pages)</div>
+
+            <label>Do you have children or dependents you claim?</label>
             <div class="radio-group mt8">
               <label class="radio-option">
                 <input type="radio" data-bind="interview.hasDependents" value="yes" ${state.interview.hasDependents==="yes"?'checked':''}>
@@ -1221,7 +1466,7 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
               </div>
             </div>
 
-            <div class="help mt12">We use these answers only to show the next pages. Your final result is still a rough estimate.</div>
+            <div class="help mt12">These answers only control which pages show next.</div>
           </div>
 
           <div id="errorArea" class="mt12" tabindex="-1" aria-live="polite"></div>
@@ -1232,18 +1477,17 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
           <h3 class="title">Kids & Child Tax Credit (CTC)</h3>
 
           <div class="info">
-            This page only shows because you said you have dependents.
-            <div class="help mt8">If you answered that by mistake, go back and change it.</div>
+            This page shows because you said you have dependents.
           </div>
 
           <div class="section mt12">
-            <label>Do the children you claim have SSNs? (CTC)</label>
-            <select data-bind="interview.kidsHaveSSN">
+            <label>Do the children you claim have SSNs?</label>
+            <select data-bind="interview.kidsHaveSSN" class="mt8">
               <option value="" ${!state.interview.kidsHaveSSN?'selected':''}>Select…</option>
               <option value="yes" ${state.interview.kidsHaveSSN==="yes"?'selected':''}>Yes</option>
               <option value="no" ${state.interview.kidsHaveSSN==="no"?'selected':''}>No</option>
             </select>
-            <div class="help mt8">If you have no kids, this won’t matter — but you told us you do, so we’re checking eligibility.</div>
+            <div class="help mt8">If “No”, this estimator will treat CTC as $0.</div>
           </div>
 
           <div class="section mt12">
@@ -1251,19 +1495,17 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
               <div>
                 <label>How many lived with you more than half the year?</label>
                 <input type="number" min="0" data-bind="interview.livedHalfCount" value="${+state.interview.livedHalfCount||0}">
-                <div class="help">Used for screening credits (rough).</div>
               </div>
               <div>
                 <label>How many were under 17 on Dec 31?</label>
                 <input type="number" min="0" data-bind="interview.under17Count" value="${+state.interview.under17Count||0}">
-                <div class="help">Under 17 is the main requirement for CTC.</div>
               </div>
             </div>
 
             <div class="mt12">
-              <label>Qualifying children to check for EITC</label>
+              <label>Qualifying children for EITC</label>
               <input type="number" min="0" data-bind="interview.eitcChildren" value="${+state.interview.eitcChildren||0}">
-              <div class="help">If unsure, enter the number who lived with you more than half the year.</div>
+              <div class="help mt8">If unsure, use the number who lived with you more than half the year.</div>
             </div>
           </div>
 
@@ -1278,14 +1520,14 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
             <div class="info">EITC is generally not allowed for Married Filing Separately. We will show $0 for EITC.</div>
           ` : `
             <div class="info">
-              This credit is for lower-to-middle income workers. Answer two simple questions and we’ll check it for you.
+              Answer two simple questions and we’ll check it for you.
             </div>
           `}
 
           <div class="section mt12">
-            <label>About how much investment income did you have? (interest/dividends/stock profits)</label>
-            <input class="money" data-money="1" data-bind="interview.investmentIncome" value="${(+state.interview.investmentIncome?Number(state.interview.investmentIncome).toLocaleString(): '')}">
-            <div class="help mt8">If you don’t have any, leave it blank or $0. If it’s above the IRS limit, EITC becomes $0.</div>
+            <label>About how much investment income did you have?</label>
+            <div class="help mt8">Examples: interest, dividends, stock profits. If none, leave $0.</div>
+            <input class="money mt8" data-money="1" data-bind="interview.investmentIncome" value="${(+state.interview.investmentIncome?Number(state.interview.investmentIncome).toLocaleString(): '')}">
           </div>
 
           ${state.interview.hasDependents!=="yes" ? `
@@ -1317,7 +1559,7 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
             <div class="grid2">
               <div>
                 <label>Number of students</label>
-                <select id="studentCountSel" data-bind="interview.studentCount">
+                <select id="studentCountSel" data-bind="interview.studentCount" class="mt8">
                   ${[0,1,2,3].map(n=>`<option value="${n}" ${(+state.interview.studentCount===n)?'selected':''}>${n}</option>`).join("")}
                 </select>
                 <div class="help mt8">AOTC is limited to 4 total years per student.</div>
@@ -1332,29 +1574,32 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
               const st = state.interview.students[i] || {tuitionNet:0,yearsClaimed:0,halfTime:true,felony:false};
               return `
                 <div class="w2-row mt12">
-                  <div style="font-weight:900;color:#21484d">Student ${i+1}</div>
-                  <div class="grid3 mt12">
-                    <div>
-                      <label>Tuition paid (net)</label>
-                      <input class="money" data-money="1" data-bind="interview.students.${i}.tuitionNet" value="${st.tuitionNet?Number(st.tuitionNet).toLocaleString():''}">
-                      <div class="help">We consider up to $4,000 per student for max AOTC.</div>
-                    </div>
-                    <div>
+                  <div style="font-weight:950;color:#21484d">Student ${i+1}</div>
+
+                  <div class="section mt12">
+                    <label>Tuition paid (net)</label>
+                    <input class="money mt8" data-money="1" data-bind="interview.students.${i}.tuitionNet" value="${st.tuitionNet?Number(st.tuitionNet).toLocaleString():''}">
+                    <div class="help mt8">We consider up to $4,000 per student for max AOTC.</div>
+                  </div>
+
+                  <div class="grid2 mt12">
+                    <div class="section">
                       <label>Years AOTC already claimed (0–3)</label>
-                      <input type="number" min="0" max="3" data-bind="interview.students.${i}.yearsClaimed" value="${+st.yearsClaimed||0}">
+                      <input class="mt8" type="number" min="0" max="3" data-bind="interview.students.${i}.yearsClaimed" value="${+st.yearsClaimed||0}">
                     </div>
-                    <div>
+
+                    <div class="section">
                       <label>At least half-time?</label>
-                      <select data-bind="interview.students.${i}.halfTime">
+                      <select class="mt8" data-bind="interview.students.${i}.halfTime">
                         <option value="true" ${(st.halfTime===true || st.halfTime==="true")?'selected':''}>Yes</option>
                         <option value="false" ${(st.halfTime===false || st.halfTime==="false")?'selected':''}>No</option>
                       </select>
                     </div>
                   </div>
 
-                  <div class="mt12">
+                  <div class="section mt12">
                     <label>Felony drug conviction before end of the year?</label>
-                    <select data-bind="interview.students.${i}.felony">
+                    <select class="mt8" data-bind="interview.students.${i}.felony">
                       <option value="false" ${(st.felony===false || st.felony==="false")?'selected':''}>No</option>
                       <option value="true" ${(st.felony===true || st.felony==="true")?'selected':''}>Yes</option>
                     </select>
@@ -1386,6 +1631,10 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
             <div class="help mt8">Federal estimate only. Not tax advice.</div>
           </div>
 
+          <div class="info mt12">
+            Bring your W-2(s) for an exact filing. This is an estimate based on what you entered.
+          </div>
+
           <div class="grid2 mt12">
             <div class="section">
               <div class="section-title">Breakdown</div>
@@ -1404,10 +1653,6 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
                 <div>Tax after nonref credits</div><div class="kpi">${fmtMoney(r.taxAfterNonref)}</div>
                 <div>Refundable credits total</div><div class="kpi">${fmtMoney(r.refundableTotal)}</div>
                 <div>Total payments</div><div class="kpi">${fmtMoney(r.totalPayments)}</div>
-              </div>
-
-              <div class="info mt12">
-                Reminder: This is a rough estimate based on your inputs. Exact results can differ (eligibility rules, exact withholding, other income/credits not included).
               </div>
 
               <div class="mt12">
@@ -1448,7 +1693,6 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
       const x = pad + i*(w+gap);
       const y = baseY - h;
 
-      // simple palette (kept consistent)
       const colors = ["#0f8f82","#87e0d6","#b6f0ea","#3fb4a8", results.finalAmount>=0 ? "#21a57f" : "#c55353"];
       ctx.fillStyle = colors[i];
       ctx.fillRect(x, y, w, h);
@@ -1461,9 +1705,6 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
     });
   }
 
-  /* ===========================
-     FOOTER WIRING
-     =========================== */
   function wireFooterOnce(){
     const back = document.getElementById("backBtn");
     const next = document.getElementById("nextBtn");
@@ -1488,13 +1729,13 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
     }
   }
 
-  /* ===========================
-     INIT
-     =========================== */
   (function init(){
-    // ensure paidTuition has default to control steps cleanly
     if(state.interview.paidTuition===null) state.interview.paidTuition="no";
     if(state.interview.hasDependents===null) state.interview.hasDependents="no";
+    if(state.work.hasW2Job===null) state.work.hasW2Job="yes";
+
+    ensureW2Count(state.work.jobCount || 1);
+    normalizeInterviewFlags();
 
     rebuildStepPlan();
     wireFooterOnce();
@@ -1505,4 +1746,3 @@ canvas{max-width:100%;background:#fff;border-radius:12px;border:1px solid #e5eee
 
 </body>
 </html>
-
